@@ -2,6 +2,8 @@
 .vscode-test/**
 out/test/**
 src/**
+examples/**
 .gitignore
 tsconfig.json
 **/*.map
+*.vsix
