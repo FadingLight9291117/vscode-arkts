@@ -1,0 +1,351 @@
+{
+  "Entry Component": {
+    "prefix": "entry",
+    "body": [
+      "@Entry",
+      "@Component",
+      "struct ${1:PageName} {",
+      "  build() {",
+      "    Column() {",
+      "      ${2:// UI components here}",
+      "    }",
+      "    .width('100%')",
+      "    .height('100%')",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个入口组件"
+  },
+  "Component": {
+    "prefix": "comp",
+    "body": [
+      "@Component",
+      "struct ${1:ComponentName} {",
+      "  build() {",
+      "    ${2:Column() \\{}",
+      "      ${3:// UI components here}",
+      "    ${2/.*(\\().*/$1 ? '}' : ''/}",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个自定义组件"
+  },
+  "State Variable": {
+    "prefix": "state",
+    "body": [
+      "@State ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个 @State 状态变量"
+  },
+  "Prop Variable": {
+    "prefix": "prop",
+    "body": [
+      "@Prop ${1:variableName}: ${2:string}"
+    ],
+    "description": "声明一个 @Prop 属性"
+  },
+  "Link Variable": {
+    "prefix": "link",
+    "body": [
+      "@Link ${1:variableName}: ${2:string}"
+    ],
+    "description": "声明一个 @Link 双向绑定变量"
+  },
+  "Watch Decorator": {
+    "prefix": "watch",
+    "body": [
+      "@Watch('${1:onPropertyChange}')",
+      "@State ${2:variableName}: ${3:string} = ${4:''}",
+      "",
+      "${1:onPropertyChange}() {",
+      "  ${5:// 监听变化}",
+      "}"
+    ],
+    "description": "创建带 @Watch 监听的状态变量"
+  },
+  "Builder Function": {
+    "prefix": "builder",
+    "body": [
+      "@Builder",
+      "${1:builderName}(${2:params}) {",
+      "  ${3:// UI components}",
+      "}"
+    ],
+    "description": "创建一个 @Builder 函数"
+  },
+  "Column Layout": {
+    "prefix": "col",
+    "body": [
+      "Column({ space: ${1:10} }) {",
+      "  ${2:// children}",
+      "}",
+      ".width(${3:'100%'})",
+      ".height(${4:'100%'})"
+    ],
+    "description": "创建一个 Column 布局"
+  },
+  "Row Layout": {
+    "prefix": "row",
+    "body": [
+      "Row({ space: ${1:10} }) {",
+      "  ${2:// children}",
+      "}",
+      ".width(${3:'100%'})"
+    ],
+    "description": "创建一个 Row 布局"
+  },
+  "Text Component": {
+    "prefix": "text",
+    "body": [
+      "Text(${1:'Hello World'})",
+      "  .fontSize(${2:16})",
+      "  .fontColor(${3:'#000000'})"
+    ],
+    "description": "创建一个 Text 组件"
+  },
+  "Button Component": {
+    "prefix": "btn",
+    "body": [
+      "Button(${1:'Click Me'})",
+      "  .width(${2:120})",
+      "  .height(${3:40})",
+      "  .onClick(() => {",
+      "    ${4:// handle click}",
+      "  })"
+    ],
+    "description": "创建一个 Button 组件"
+  },
+  "Image Component": {
+    "prefix": "img",
+    "body": [
+      "Image(${1:\\$r('app.media.icon')})",
+      "  .width(${2:100})",
+      "  .height(${3:100})",
+      "  .objectFit(ImageFit.${4:Contain})"
+    ],
+    "description": "创建一个 Image 组件"
+  },
+  "List Component": {
+    "prefix": "list",
+    "body": [
+      "List({ space: ${1:10} }) {",
+      "  ForEach(${2:this.items}, (item: ${3:string}, index: number) => {",
+      "    ListItem() {",
+      "      ${4:Text(item)}",
+      "    }",
+      "  })",
+      "}",
+      ".width('100%')"
+    ],
+    "description": "创建一个 List 列表组件"
+  },
+  "ForEach Loop": {
+    "prefix": "foreach",
+    "body": [
+      "ForEach(${1:this.items}, (item: ${2:any}, index: number) => {",
+      "  ${3:// render item}",
+      "}, (item: ${2:any}) => ${4:item.toString()})"
+    ],
+    "description": "创建一个 ForEach 循环"
+  },
+  "TextInput Component": {
+    "prefix": "input",
+    "body": [
+      "TextInput({ placeholder: ${1:'请输入'} })",
+      "  .width(${2:'100%'})",
+      "  .height(${3:40})",
+      "  .onChange((value: string) => {",
+      "    ${4:this.inputValue = value}",
+      "  })"
+    ],
+    "description": "创建一个 TextInput 输入框"
+  },
+  "Custom Dialog": {
+    "prefix": "dialog",
+    "body": [
+      "@CustomDialog",
+      "struct ${1:MyDialog} {",
+      "  controller: CustomDialogController",
+      "",
+      "  build() {",
+      "    Column() {",
+      "      Text('${2:Dialog Content}')",
+      "        .fontSize(20)",
+      "      ",
+      "      Row() {",
+      "        Button('取消')",
+      "          .onClick(() => {",
+      "            this.controller.close()",
+      "          })",
+      "        Button('确定')",
+      "          .onClick(() => {",
+      "            ${3:// confirm action}",
+      "            this.controller.close()",
+      "          })",
+      "      }",
+      "    }",
+      "    .padding(20)",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个自定义对话框"
+  },
+  "aboutToAppear Lifecycle": {
+    "prefix": "appear",
+    "body": [
+      "aboutToAppear() {",
+      "  ${1:// 组件即将出现时执行}",
+      "}"
+    ],
+    "description": "aboutToAppear 生命周期方法"
+  },
+  "aboutToDisappear Lifecycle": {
+    "prefix": "disappear",
+    "body": [
+      "aboutToDisappear() {",
+      "  ${1:// 组件即将销毁时执行}",
+      "}"
+    ],
+    "description": "aboutToDisappear 生命周期方法"
+  },
+  "HTTP Request": {
+    "prefix": "http",
+    "body": [
+      "import http from '@ohos.net.http'",
+      "",
+      "let httpRequest = http.createHttp()",
+      "httpRequest.request(",
+      "  '${1:url}',",
+      "  {",
+      "    method: http.RequestMethod.${2:GET},",
+      "    header: {",
+      "      'Content-Type': 'application/json'",
+      "    }",
+      "  },",
+      "  (err, data) => {",
+      "    if (!err) {",
+      "      ${3:// handle response}",
+      "      console.log('Result: ' + data.result)",
+      "    } else {",
+      "      console.error('Error: ' + JSON.stringify(err))",
+      "    }",
+      "  }",
+      ")"
+    ],
+    "description": "创建一个 HTTP 请求"
+  },
+  "Entry Component V2": {
+    "prefix": "entryv2",
+    "body": [
+      "@Entry",
+      "@ComponentV2",
+      "struct ${1:PageName} {",
+      "  @Local message: string = '${2:Hello World}'",
+      "",
+      "  build() {",
+      "    Column() {",
+      "      Text(this.message)",
+      "        .fontSize(20)",
+      "        .onClick(() => {",
+      "          this.message = '${3:Clicked!}'",
+      "        })",
+      "    }",
+      "    .width('100%')",
+      "    .height('100%')",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个 V2 入口组件 (API 12+)"
+  },
+  "Component V2": {
+    "prefix": "compv2",
+    "body": [
+      "@ComponentV2",
+      "struct ${1:ComponentName} {",
+      "  @Param ${2:title}: string = ''",
+      "  @Event ${3:onAction}: () => void = () => {}",
+      "",
+      "  build() {",
+      "    Column() {",
+      "      Text(this.${2:title})",
+      "      Button('Action')",
+      "        .onClick(() => this.${3:onAction}())",
+      "    }",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个 V2 自定义组件 (API 12+)"
+  },
+  "Local Variable V2": {
+    "prefix": "local",
+    "body": [
+      "@Local ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个 @Local 内部状态变量 (V2)"
+  },
+  "Param Variable V2": {
+    "prefix": "param",
+    "body": [
+      "@Param ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个 @Param 输入参数 (V2)"
+  },
+  "Event V2": {
+    "prefix": "event",
+    "body": [
+      "@Event ${1:eventName}: (${2:param}: ${3:string}) => void = (${2:param}) => {}"
+    ],
+    "description": "声明一个 @Event 输出事件 (V2)"
+  },
+  "Monitor V2": {
+    "prefix": "monitor",
+    "body": [
+      "@Monitor('${1:propertyName}')",
+      "on${1/(.*)/${1:/capitalize}/}Change(monitor: IMonitor) {",
+      "  console.log('${1:propertyName} changed from', monitor.value()?.before, 'to', monitor.value()?.now)",
+      "}"
+    ],
+    "description": "创建一个 @Monitor 深度监听器 (V2)"
+  },
+  "Provider V2": {
+    "prefix": "provider",
+    "body": [
+      "@Provider('${1:key}') ${2:variableName}: ${3:string} = ${4:''}"
+    ],
+    "description": "声明一个 @Provider 跨组件共享变量 (V2)"
+  },
+  "Consumer V2": {
+    "prefix": "consumer",
+    "body": [
+      "@Consumer('${1:key}') ${2:variableName}: ${3:string} = ${4:''}"
+    ],
+    "description": "声明一个 @Consumer 消费共享变量 (V2)"
+  },
+  "Computed V2": {
+    "prefix": "computed",
+    "body": [
+      "@Computed",
+      "get ${1:computedName}(): ${2:string} {",
+      "  return ${3:this.value}",
+      "}"
+    ],
+    "description": "创建一个 @Computed 计算属性 (V2)"
+  },
+  "ObservedV2 Class": {
+    "prefix": "observedv2",
+    "body": [
+      "@ObservedV2",
+      "class ${1:ClassName} {",
+      "  @Trace ${2:property}: ${3:string} = ${4:''}",
+      "}"
+    ],
+    "description": "创建一个 V2 可观察类 (深度观测)"
+  },
+  "Param Once V2": {
+    "prefix": "paramonce",
+    "body": [
+      "@Param @Once ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个仅初始化同步的参数 (V2)"
+  }
+}

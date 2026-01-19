@@ -1,0 +1,89 @@
+{
+  "name": "arkts-language-support",
+  "displayName": "ArkTS Language Support",
+  "description": "语言支持插件 for ArkTS (鸿蒙开发语言)",
+  "version": "0.0.1",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:arkts"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "arkts",
+        "aliases": ["ArkTS", "arkts", "ets"],
+        "extensions": [".ets"],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/arkts-light.png",
+          "dark": "./icons/arkts-dark.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "arkts",
+        "scopeName": "source.arkts",
+        "path": "./syntaxes/arkts.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "arkts",
+        "path": "./snippets/arkts.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "arkts.helloWorld",
+        "title": "ArkTS: Hello World"
+      },
+      {
+        "command": "arkts.formatDocument",
+        "title": "ArkTS: Format Document"
+      }
+    ],
+    "configuration": {
+      "title": "ArkTS",
+      "properties": {
+        "arkts.enableAutoComplete": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用自动补全功能"
+        },
+        "arkts.enableHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用悬停提示功能"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8"
+  }
+}

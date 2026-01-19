@@ -1,0 +1,172 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "ArkTS",
+  "scopeName": "source.arkts",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#decorators" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#arkts-specific" },
+    { "include": "#functions" },
+    { "include": "#variables" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.arkts",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.arkts",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.arkts",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.arkts",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.arkts",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.arkts",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.template.arkts",
+          "begin": "`",
+          "end": "`",
+          "patterns": [
+            {
+              "name": "meta.template.expression.arkts",
+              "begin": "\\$\\{",
+              "end": "\\}",
+              "patterns": [
+                { "include": "$self" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "decorators": {
+      "patterns": [
+        {
+          "comment": "V1 状态管理装饰器",
+          "name": "meta.decorator.arkts",
+          "match": "@(Component|Entry|State|Prop|Link|Provide|Consume|Watch|Observed|ObjectLink|StorageLink|StorageProp|LocalStorageLink|LocalStorageProp|Track|Builder|BuilderParam|Styles|Extend|CustomDialog|Preview|Reusable|Require)\\b",
+          "captures": {
+            "0": { "name": "entity.name.function.decorator.arkts" }
+          }
+        },
+        {
+          "comment": "V2 状态管理装饰器",
+          "name": "meta.decorator.v2.arkts",
+          "match": "@(ComponentV2|Local|Param|Once|Event|Monitor|Provider|Consumer|Computed|ObservedV2|Trace|ReusableV2)\\b",
+          "captures": {
+            "0": { "name": "entity.name.function.decorator.arkts" }
+          }
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.arkts",
+          "match": "\\b(if|else|for|while|do|switch|case|default|break|continue|return|throw|try|catch|finally|await|async|yield)\\b"
+        },
+        {
+          "name": "keyword.other.arkts",
+          "match": "\\b(import|export|from|as|class|extends|implements|interface|type|enum|namespace|module|declare|abstract|public|private|protected|static|readonly|const|let|var|function|new|this|super|typeof|instanceof|in|of|delete|void|null|undefined|true|false)\\b"
+        },
+        {
+          "name": "storage.type.arkts",
+          "match": "\\b(struct)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.primitive.arkts",
+          "match": "\\b(string|number|boolean|any|void|never|unknown|object|symbol|bigint)\\b"
+        },
+        {
+          "name": "entity.name.type.arkts",
+          "match": "\\b([A-Z][a-zA-Z0-9_]*)\\b"
+        }
+      ]
+    },
+    "arkts-specific": {
+      "patterns": [
+        {
+          "comment": "ArkTS UI 组件",
+          "name": "support.class.component.arkts",
+          "match": "\\b(Text|Column|Row|Stack|Flex|List|ListItem|Grid|GridItem|Scroll|Swiper|Tabs|TabContent|Image|Button|TextInput|TextArea|Toggle|Slider|Progress|Rating|Select|Radio|Checkbox|CheckboxGroup|DatePicker|TimePicker|Panel|Navigator|NavRouter|NavDestination|Refresh|WaterFlow|RelativeContainer|Badge|Blank|Divider|LoadingProgress|Marquee|QRCode|DataPanel|Gauge|ImageAnimator|Video|Web|XComponent|Canvas|Shape|Rect|Circle|Ellipse|Line|Path|Polygon|Polyline|PatternLock|RichText|Search|Stepper|StepperItem|Menu|MenuItem|MenuItemGroup|AlertDialog|ActionSheet|CustomDialog|Popup|Sheet)\\b"
+        },
+        {
+          "comment": "ArkTS 布局属性",
+          "name": "support.function.attribute.arkts",
+          "match": "\\.(width|height|size|padding|margin|backgroundColor|border|borderRadius|opacity|visibility|zIndex|align|alignItems|justifyContent|layoutWeight|flexGrow|flexShrink|flexBasis|position|offset|markAnchor|aspectRatio|displayPriority|constraintSize|onClick|onTouch|onAppear|onDisAppear|onAreaChange|onFocus|onBlur|onKeyEvent|onMouse|onHover|gesture|shadow|clip|mask|foregroundColor|overlay|bindPopup|bindMenu|bindSheet|stateStyles|attributeModifier)\\b"
+        },
+        {
+          "comment": "ArkTS 生命周期",
+          "name": "support.function.lifecycle.arkts",
+          "match": "\\b(aboutToAppear|aboutToDisappear|onPageShow|onPageHide|onBackPress|onDidBuild|aboutToReuse|aboutToRecycle|onWillApplyTheme|build)\\b"
+        },
+        {
+          "comment": "ArkTS 渲染控制",
+          "name": "support.function.rendering.arkts",
+          "match": "\\b(ForEach|LazyForEach|Repeat|if|else)\\b"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.arkts",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.arkts",
+          "match": "\\b[a-z_][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.arkts",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.hex.arkts",
+          "match": "\\b0[xX][0-9a-fA-F]+\\b"
+        }
+      ]
+    }
+  }
+}
