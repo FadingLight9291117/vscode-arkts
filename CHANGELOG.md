@@ -2,6 +2,67 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.1.0] - 2026-01-19
+
+### 新增
+- **JSON5 语法高亮支持**
+  - 支持单行注释 `//` 和块注释 `/* */`
+  - 支持双引号和单引号字符串
+  - 支持无引号键名（identifier keys）
+  - 支持尾随逗号
+  - 支持十六进制数字 `0xFF`
+  - 支持 `Infinity` 和 `NaN`
+  - 自动识别 `.json5` 文件扩展名
+  - 自动识别 HarmonyOS 配置文件：`oh-package.json5`、`build-profile.json5`、`module.json5`、`hvigorfile.json5`
+
+- **跨文件 import 跳转**（P0 功能）
+  - 支持 `import { Component } from './path'` 跳转到目标文件
+  - 支持在 import 语句中跳转到导入的符号定义
+  - 支持在代码中使用导入符号时跳转到原定义
+  - 支持别名导入：`import { A as B } from './path'`
+  - 支持默认导入：`import Component from './path'`
+  - 自动解析相对路径（./、../）
+  - 自动识别 .ets、.ts 扩展名
+
+- **类型系统跳转增强**
+  - 支持 interface 定义跳转
+  - 支持 class 定义跳转
+  - 支持 type 别名跳转
+  - 支持 enum 枚举跳转
+
+### 技术改进
+- DefinitionProvider 改为异步实现
+- 添加路径解析模块
+- 添加跨文件符号查找
+- 新增 JSON5 语言配置文件
+- 新增 JSON5 TextMate 语法规则
+
+### 构建优化
+- tsconfig.json 排除 examples 目录避免编译错误
+
+## [1.0.6] - 2026-01-19
+
+### 新增
+- **跨文件 import 跳转**（P0 功能）
+  - 支持 `import { Component } from './path'` 跳转到目标文件
+  - 支持在 import 语句中跳转到导入的符号定义
+  - 支持在代码中使用导入符号时跳转到原定义
+  - 支持别名导入：`import { A as B } from './path'`
+  - 支持默认导入：`import Component from './path'`
+  - 自动解析相对路径（./、../）
+  - 自动识别 .ets、.ts 扩展名
+
+- **类型系统跳转增强**
+  - 支持 interface 定义跳转
+  - 支持 class 定义跳转
+  - 支持 type 别名跳转
+  - 支持 enum 枚举跳转
+
+### 技术改进
+- DefinitionProvider 改为异步实现
+- 添加路径解析模块
+- 添加跨文件符号查找
+
 ## [1.0.5] - 2026-01-19
 
 ### 修复

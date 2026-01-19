@@ -96,21 +96,23 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 
 ## 4. 待实现功能
 
-### 4.1 跨文件跳转 (高优先级 ⭐⭐⭐)
+### 4.1 跨文件跳转 (高优先级 ⭐⭐⭐) ✅ 已实现
 | 功能 | 状态 | 说明 |
 |------|------|------|
-| import 语句跳转 | ❌ | `import { MyComponent } from './MyComponent'` → 跳转到文件 |
-| 组件跨文件引用 | ❌ | 使用其他文件定义的组件时跳转 |
-| @ohos 模块跳转 | ❌ | `import router from '@ohos.router'` |
-| 相对路径解析 | ❌ | 解析 `./`, `../` 路径 |
+| import 语句跳转 | ✅ | `import { MyComponent } from './MyComponent'` → 跳转到文件 |
+| 组件跨文件引用 | ✅ | 使用其他文件定义的组件时跳转 |
+| @ohos 模块跳转 | ❌ | `import router from '@ohos.router'` (系统模块暂不支持) |
+| 相对路径解析 | ✅ | 解析 `./`, `../` 路径，自动识别 .ets/.ts 扩展名 |
+| 别名导入 | ✅ | `import { A as B } from './path'` |
+| 默认导入 | ✅ | `import Component from './path'` |
 
-### 4.2 类型系统跳转
+### 4.2 类型系统跳转 ✅ 已实现
 | 功能 | 状态 | 优先级 | 说明 |
 |------|------|--------|------|
-| interface 定义跳转 | ❌ | ⭐⭐⭐ | `interface Person { }` |
-| class 类定义跳转 | ❌ | ⭐⭐⭐ | `class MyClass { }` |
-| type 别名跳转 | ❌ | ⭐⭐ | `type ID = string` |
-| enum 枚举跳转 | ❌ | ⭐⭐ | `enum Color { Red, Green }` |
+| interface 定义跳转 | ✅ | ⭐⭐⭐ | `interface Person { }` |
+| class 类定义跳转 | ✅ | ⭐⭐⭐ | `class MyClass { }` |
+| type 别名跳转 | ✅ | ⭐⭐ | `type ID = string` |
+| enum 枚举跳转 | ✅ | ⭐⭐ | `enum Color { Red, Green }` |
 | 泛型类型跳转 | ❌ | ⭐ | `Array<T>` 中的 T |
 
 ### 4.3 引用查找

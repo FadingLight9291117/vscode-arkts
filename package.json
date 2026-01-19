@@ -2,7 +2,7 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support",
   "description": "ArkTS (HarmonyOS) language support with syntax highlighting, code completion, hover documentation and more",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "publisher": "cheliangzhao",
   "author": {
     "name": "车亮召"
@@ -56,6 +56,23 @@
           "light": "./icons/arkts-light.png",
           "dark": "./icons/arkts-dark.png"
         }
+      },
+      {
+        "id": "json5",
+        "aliases": [
+          "JSON5",
+          "json5"
+        ],
+        "extensions": [
+          ".json5"
+        ],
+        "filenames": [
+          "oh-package.json5",
+          "build-profile.json5",
+          "module.json5",
+          "hvigorfile.json5"
+        ],
+        "configuration": "./language-configuration-json5.json"
       }
     ],
     "grammars": [
@@ -63,6 +80,11 @@
         "language": "arkts",
         "scopeName": "source.arkts",
         "path": "./syntaxes/arkts.tmLanguage.json"
+      },
+      {
+        "language": "json5",
+        "scopeName": "source.json5",
+        "path": "./syntaxes/json5.tmLanguage.json"
       }
     ],
     "snippets": [
