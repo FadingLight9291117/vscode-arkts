@@ -2,10 +2,10 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support",
   "description": "ArkTS (HarmonyOS) language support with syntax highlighting, code completion, hover documentation and more",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "cheliangzhao",
   "author": {
-    "name": "车亮召"
+    "name": "Kingsoft"
   },
   "license": "MIT",
   "icon": "images/icon.png",
@@ -106,13 +106,14 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
     "@types/node": "18.x",
+    "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8"
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "sharp": "^0.34.5",
+    "typescript": "^5.3.3"
   }
 }

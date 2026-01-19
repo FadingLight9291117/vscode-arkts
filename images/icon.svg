@@ -14,8 +14,8 @@
     </filter>
   </defs>
   
-  <!-- 圆角背景 -->
-  <rect width="128" height="128" rx="26" fill="url(#bgGrad)"/>
+  <!-- 圆角背景（画布外圈保持透明，四角不再被填充） -->
+  <rect x="6" y="6" width="116" height="116" rx="26" ry="26" fill="url(#bgGrad)"/>
   
   <!-- Ark 方舟图形 - 简化的船/方舟形状 -->
   <path d="M 28 55 L 64 35 L 100 55 L 100 70 C 100 75 95 80 90 82 L 64 92 L 38 82 C 33 80 28 75 28 70 Z" 
