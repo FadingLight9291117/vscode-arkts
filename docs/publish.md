@@ -1,3 +1,6 @@
+🔗 市场链接: https://marketplace.visualstudio.com/items?itemName=cheliangzhao.arkts-language-support
+🛠️ 管理链接: https://marketplace.visualstudio.com/manage/publishers/cheliangzhao/extensions/arkts-language-support/hub
+
 发布 VS Code 插件到市场需要以下步骤：
 
 ## 1. 创建发布者账号
@@ -71,4 +74,3 @@ vsce publish major
 - [ ] README 完整
 - [ ] 运行 `npm run compile` 无错误
 
-需要我帮你完善 package.json 或创建图标吗？
