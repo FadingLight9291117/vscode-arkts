@@ -72,7 +72,30 @@
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `arkts.enableAutoComplete` | `boolean` | `true` | 启用/禁用自动补全功能 |
+| `arkts.completion.enableKeywords` | `boolean` | `true` | 启用/禁用关键字补全（`const/if/try` 等） |
+| `arkts.completion.keywordMode` | `string` | `common` | 关键字补全范围：`common`（推荐，贴近 ArkTS 迁移指南约束）/ `full`（更完整，可能包含 ArkTS 不推荐/不支持项）/ `arkts`（最精简，仅 ArkTS 结构相关） |
+| `arkts.completion.enableImportSnippets` | `boolean` | `true` | 启用/禁用 HarmonyOS Kit `import` 模板补全（`@kit.*` 推荐写法） |
+| `arkts.completion.enableLifecycleSnippets` | `boolean` | `true` | 启用/禁用生命周期回调模板补全（自定义组件/UIAbility） |
+| `arkts.diagnostics.enable` | `boolean` | `true` | 启用/禁用实时诊断（Problems 面板提示） |
+| `arkts.diagnostics.enableUnusedState` | `boolean` | `true` | 启用/禁用未使用的 `@State` 变量提示（简化规则） |
+| `arkts.diagnostics.enableMigrationRules` | `boolean` | `true` | 启用/禁用 TS→ArkTS 迁移建议诊断（如避免 `var/any/unknown` 等） |
+| `arkts.diagnostics.severity` | `string` | `warning` | 诊断严重程度：`information` / `warning` / `error` |
 | `arkts.enableHover` | `boolean` | `true` | 启用/禁用悬停提示功能 |
+
+### 关于关键字模式（keywordMode）
+
+- `common`：更偏向 ArkTS 迁移指南推荐（例如默认不“强调”不推荐/不支持项）。
+- `full`：更接近 TS/JS 的关键字/保留字集合，适合需要更全面提示的场景。
+- `arkts`：仅保留 ArkTS 生命周期/结构相关，适合极简补全偏好。
+
+### HarmonyOS Kit import 模板
+
+在文件中输入 `import`（或 `im`）时，插件会优先提示常用的 `@kit.*` import 模板，帮助快速写出推荐写法。
+
+### 生命周期回调模板
+
+- 在 `struct` 组件内部：提示 `aboutToAppear` / `onDidBuild` / `aboutToDisappear` 等自定义组件生命周期回调。
+- 在 `class Xxx extends UIAbility` 内部：提示 `onCreate` / `onForeground` / `onBackground` / `onNewWant` 等 UIAbility 生命周期回调。
 
 ## 代码片段
 

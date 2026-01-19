@@ -3,6 +3,7 @@ import { ArkTSCompletionProvider } from './providers/completionProvider';
 import { ArkTSHoverProvider } from './providers/hoverProvider';
 import { ArkTSDefinitionProvider } from './providers/definitionProvider';
 import { ArkTSReferenceProvider } from './providers/referenceProvider';
+import { ArkTSDiagnosticsProvider } from './providers/diagnosticsProvider';
 
 // 插件激活时调用
 export function activate(context: vscode.ExtensionContext) {
@@ -49,20 +50,27 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    // 创建诊断集合（用于显示错误和警告）
-    const diagnosticCollection = vscode.languages.createDiagnosticCollection('arkts');
-    
+    // 实时诊断（Problems 面板提示）
+    const diagnosticsProvider = new ArkTSDiagnosticsProvider();
+
     // 监听文档变化，进行实时诊断
     const documentChangeListener = vscode.workspace.onDidChangeTextDocument(event => {
         if (event.document.languageId === 'arkts') {
-            updateDiagnostics(event.document, diagnosticCollection);
+            diagnosticsProvider.updateDiagnostics(event.document);
         }
     });
 
     // 监听文档打开
     const documentOpenListener = vscode.workspace.onDidOpenTextDocument(document => {
         if (document.languageId === 'arkts') {
-            updateDiagnostics(document, diagnosticCollection);
+            diagnosticsProvider.updateDiagnostics(document);
+        }
+    });
+
+    // 配置项变化时，刷新已打开的 ArkTS 文档诊断
+    const configChangeListener = vscode.workspace.onDidChangeConfiguration(event => {
+        if (event.affectsConfiguration('arkts.diagnostics')) {
+            diagnosticsProvider.refreshAllOpenDocuments();
         }
     });
 
@@ -74,45 +82,14 @@ export function activate(context: vscode.ExtensionContext) {
         referenceProvider,
         helloWorldCommand,
         formatCommand,
-        diagnosticCollection,
+        diagnosticsProvider.collection,
         documentChangeListener,
-        documentOpenListener
+        documentOpenListener,
+        configChangeListener
     );
-}
 
-// 更新诊断信息
-function updateDiagnostics(document: vscode.TextDocument, diagnosticCollection: vscode.DiagnosticCollection) {
-    const diagnostics: vscode.Diagnostic[] = [];
-    const text = document.getText();
-
-    // 示例：检查是否缺少 @Entry 装饰器
-    if (text.includes('@Component') && !text.includes('@Entry') && text.includes('struct')) {
-        // 这只是一个示例，实际中可能不需要每个组件都有 @Entry
-    }
-
-    // 示例：检查未使用的 @State 变量（简化版）
-    const stateRegex = /@State\s+(\w+)/g;
-    let match;
-    while ((match = stateRegex.exec(text)) !== null) {
-        const varName = match[1];
-        const varUsageRegex = new RegExp(`\\b${varName}\\b`, 'g');
-        const matches = text.match(varUsageRegex);
-        
-        // 如果变量只出现一次（声明时），可能未使用
-        if (matches && matches.length === 1) {
-            const startPos = document.positionAt(match.index);
-            const endPos = document.positionAt(match.index + match[0].length);
-            const diagnostic = new vscode.Diagnostic(
-                new vscode.Range(startPos, endPos),
-                `@State 变量 '${varName}' 可能未使用`,
-                vscode.DiagnosticSeverity.Warning
-            );
-            diagnostic.source = 'arkts';
-            diagnostics.push(diagnostic);
-        }
-    }
-
-    diagnosticCollection.set(document.uri, diagnostics);
+    // 激活后对已打开文档做一次诊断
+    diagnosticsProvider.refreshAllOpenDocuments();
 }
 
 // 插件停用时调用

@@ -2,6 +2,34 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.2.1] - 2026-01-19
+
+### 修复
+- 修复 Hover 文档模板字符串导致的编译问题
+
+### 改进
+- 清理 package.json 中冗余 activationEvents，避免 VS Code 警告
+- 文档补充：关键字模式、import 模板、生命周期模板、诊断配置项
+
+## [1.2.0] - 2026-01-19
+
+### 新增
+- **关键字补全可配置**
+  - 支持 `arkts.completion.enableKeywords`
+  - 支持 `arkts.completion.keywordMode`（common/full/arkts）
+- **HarmonyOS Kit import 模板补全**
+  - 支持 `arkts.completion.enableImportSnippets`
+  - 提供 `@kit.*` 推荐写法模板
+- **生命周期回调模板补全**
+  - 支持 `arkts.completion.enableLifecycleSnippets`
+  - struct 场景：自定义组件/页面生命周期（如 aboutToAppear/onDidBuild/onPageShow/onBackPress）
+  - UIAbility 场景：UIAbility 生命周期（如 onCreate/onForeground/onBackground/onNewWant）
+- **迁移建议诊断（TS→ArkTS）**
+  - 支持 `arkts.diagnostics.enableMigrationRules` 等开关与严重程度配置
+
+### 改进
+- Completion 配置集中化与去重策略优化（后定义覆盖前定义）
+
 ## [1.1.1] - 2026-01-19
 
 ### 新增

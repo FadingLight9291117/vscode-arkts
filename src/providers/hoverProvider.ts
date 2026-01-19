@@ -341,6 +341,84 @@ ForEach(
 `],
     ]);
 
+        // 生命周期回调文档（来自华为官方指南）
+        private lifecycleDocs: Map<string, string> = new Map([
+      ['aboutToAppear', `
+    **aboutToAppear()**
+
+    自定义组件生命周期回调：创建自定义组件新实例后、执行 build() 之前触发。
+    `],
+      ['onDidBuild', `
+    **onDidBuild()**
+
+    自定义组件生命周期回调：组件首次渲染触发的 build() 执行完成之后回调；后续重新渲染不会再次回调。
+    `],
+      ['aboutToDisappear', `
+    **aboutToDisappear()**
+
+    自定义组件生命周期回调：自定义组件析构销毁之前触发。
+
+    注意：官方建议避免在此回调中执行 async/await 等异步耗时操作，也不建议在此回调中修改状态变量。
+    `],
+
+      ['onPageShow', `
+    **onPageShow()**
+
+    页面生命周期回调：页面显示时触发。
+    `],
+      ['onPageHide', `
+    **onPageHide()**
+
+    页面生命周期回调：页面隐藏时触发。
+    `],
+      ['onBackPress', `
+    **onBackPress(): boolean**
+
+    页面生命周期回调：用户触发返回操作时回调；返回 true 表示拦截返回，返回 false 表示不拦截。
+    `],
+
+      ['onCreate', `
+    **onCreate(want, launchParam)**
+
+    UIAbility 生命周期回调：首次创建 UIAbility 实例时触发（整个生命周期中仅一次）。
+    `],
+      ['onWindowStageCreate', `
+    **onWindowStageCreate(windowStage)**
+
+    UIAbility 生命周期回调：WindowStage 创建完成后回调；可用于加载 UI（loadContent）和订阅 WindowStage 事件。
+    `],
+      ['onForeground', `
+    **onForeground()**
+
+    UIAbility 生命周期回调：切换至前台且 UI 可见之前触发；可申请/恢复需要的系统资源。
+    `],
+      ['onBackground', `
+    **onBackground()**
+
+    UIAbility 生命周期回调：UI 完全不可见后触发；用于释放无用资源，避免执行耗时操作。
+    `],
+      ['onWindowStageWillDestroy', `
+    **onWindowStageWillDestroy(windowStage)**
+
+    UIAbility 生命周期回调：WindowStage 销毁前回调；此时 WindowStage 仍可用，可释放其相关资源/注销订阅。
+    `],
+      ['onWindowStageDestroy', `
+    **onWindowStageDestroy()**
+
+    UIAbility 生命周期回调：WindowStage 销毁后回调；此时 WindowStage 不可用，可释放 UI 资源。
+    `],
+      ['onDestroy', `
+    **onDestroy()**
+
+    UIAbility 生命周期回调：实例销毁前触发；用于释放系统资源、保存数据等。
+    `],
+      ['onNewWant', `
+    **onNewWant(want, launchParam)**
+
+    UIAbility 生命周期回调：UIAbility 实例已创建，再次启动该实例时触发；用于更新要加载的资源与数据。
+    `],
+        ]);
+
     provideHover(
         document: vscode.TextDocument,
         position: vscode.Position,
@@ -363,6 +441,12 @@ ForEach(
             if (doc) {
                 return new vscode.Hover(new vscode.MarkdownString(doc));
             }
+        }
+
+        // 检查是否是组件
+        const lifecycleDoc = this.lifecycleDocs.get(word);
+        if (lifecycleDoc) {
+          return new vscode.Hover(new vscode.MarkdownString(lifecycleDoc));
         }
 
         // 检查是否是组件

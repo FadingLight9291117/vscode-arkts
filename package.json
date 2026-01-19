@@ -2,7 +2,7 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support",
   "description": "ArkTS (HarmonyOS) language support with syntax highlighting, code completion, hover documentation and more",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "publisher": "cheliangzhao",
   "author": {
     "name": "车亮召"
@@ -34,9 +34,6 @@
     "Programming Languages",
     "Snippets",
     "Formatters"
-  ],
-  "activationEvents": [
-    "onLanguage:arkts"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -110,6 +107,61 @@
           "type": "boolean",
           "default": true,
           "description": "启用自动补全功能"
+        },
+        "arkts.completion.enableKeywords": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用关键字补全（const/if/try 等）"
+        },
+        "arkts.completion.enableImportSnippets": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用 HarmonyOS Kit import 模板补全（@kit.* 推荐写法）"
+        },
+        "arkts.completion.enableLifecycleSnippets": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用生命周期回调模板补全（自定义组件/UIAbility）"
+        },
+        "arkts.completion.keywordMode": {
+          "type": "string",
+          "default": "common",
+          "enum": [
+            "common",
+            "full",
+            "arkts"
+          ],
+          "enumDescriptions": [
+            "常用关键字（推荐，尽量贴近 ArkTS 迁移指南的约束）",
+            "更完整的 TS/JS 关键字/保留字集合（更全面，可能包含 ArkTS 不推荐/不支持项）",
+            "仅 ArkTS 生命周期/结构相关（最精简）"
+          ],
+          "description": "关键字补全范围"
+        },
+        "arkts.diagnostics.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用/禁用 ArkTS 实时诊断（Problems 面板提示）"
+        },
+        "arkts.diagnostics.enableUnusedState": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用未使用的 @State 变量提示（简化规则）"
+        },
+        "arkts.diagnostics.enableMigrationRules": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用 TypeScript→ArkTS 迁移建议诊断（如避免 var/any/unknown 等）"
+        },
+        "arkts.diagnostics.severity": {
+          "type": "string",
+          "default": "warning",
+          "enum": [
+            "information",
+            "warning",
+            "error"
+          ],
+          "description": "诊断严重程度（information/warning/error）"
         },
         "arkts.enableHover": {
           "type": "boolean",
