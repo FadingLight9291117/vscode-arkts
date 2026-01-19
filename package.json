@@ -1,9 +1,32 @@
 {
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support",
-  "description": "语言支持插件 for ArkTS (鸿蒙开发语言)",
-  "version": "0.0.1",
-  "publisher": "your-publisher-name",
+  "description": "ArkTS (HarmonyOS) language support with syntax highlighting, code completion, hover documentation and more",
+  "version": "1.0.0",
+  "publisher": "cheliangzhao",
+  "author": {
+    "name": "车亮召"
+  },
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FadingLight9291117/vscode-arkts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FadingLight9291117/vscode-arkts/issues"
+  },
+  "homepage": "https://github.com/FadingLight9291117/vscode-arkts#readme",
+  "keywords": [
+    "arkts",
+    "harmonyos",
+    "hongmeng",
+    "ets",
+    "huawei",
+    "language",
+    "syntax",
+    "highlighting"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
