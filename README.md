@@ -3,7 +3,7 @@
 [![VS Code 版本](https://img.shields.io/badge/VS%20Code-%3E%3D1.85.0-blue?style=for-the-badge&logo=visual-studio-code)](https://code.visualstudio.com/)
 [![许可证](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-为 Visual Studio Code 提供 ArkTS（鸿蒙应用开发语言）语言支持，包含语法高亮、智能补全、悬停文档、代码导航等功能。
+为 Visual Studio Code 提供 ArkTS（鸿蒙应用开发语言）语言支持，包含语法高亮、智能补全、悬停文档、代码导航等功能。未来计划支持代码编译，支持LLM的MCP功能。
 
 ![功能演示](images/demo.gif)
 
