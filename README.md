@@ -1,49 +1,141 @@
-# ArkTS Language Support
+# ArkTS Language Support for Visual Studio Code
 
-为 ArkTS（鸿蒙开发语言）提供 VS Code 语言支持的插件。
+[![VS Code 版本](https://img.shields.io/badge/VS%20Code-%3E%3D1.85.0-blue?style=for-the-badge&logo=visual-studio-code)](https://code.visualstudio.com/)
+[![许可证](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+为 Visual Studio Code 提供 ArkTS（鸿蒙应用开发语言）语言支持，包含语法高亮、智能补全、悬停文档、代码导航等功能。
+
+![功能演示](images/demo.gif)
+
+## 快速开始
+
+1. 安装插件
+2. 打开任意 `.ets` 文件，插件将自动激活
+3. 开始享受 ArkTS 开发体验！
 
 ## 功能特性
 
-### 🎨 语法高亮
-- 支持 ArkTS 特有的装饰器语法高亮（@Entry, @Component, @State 等）
-- 支持 ArkUI 组件关键字高亮
-- 支持生命周期方法高亮
+- ✅ 支持 ArkTS 状态管理 V1 和 V2 装饰器语法
+- ✅ 支持 HarmonyOS API 12+ 新特性
+- ✅ 即时语法错误提示
+- ✅ 智能代码补全
+- ✅ 悬停文档提示
+- ✅ 代码导航与跳转
+- ✅ 代码大纲
+- ✅ 代码片段
+- ✅ 代码高亮
 
-### 💡 智能补全
-- ArkTS 装饰器补全（输入 @ 触发）
-- ArkUI 组件补全
-- 组件属性方法补全（输入 . 触发）
+### 支持的装饰器
 
-### 📖 悬停文档
-- 装饰器使用说明
-- 组件 API 文档
-- 示例代码展示
+#### 状态管理 V1（推荐用于 API 11 及以下）
+| 装饰器 | 说明 |
+|--------|------|
+| `@Entry` | 页面入口组件 |
+| `@Component` | 自定义组件 |
+| `@State` | 组件内状态 |
+| `@Prop` | 单向数据传递 |
+| `@Link` | 双向数据绑定 |
+| `@Provide` / `@Consume` | 跨层级数据传递 |
+| `@Watch` | 状态变化监听 |
+| `@Observed` / `@ObjectLink` | 嵌套对象观察 |
+| `@Builder` / `@BuilderParam` | UI 复用 |
+| `@Styles` / `@Extend` | 样式复用 |
+| `@StorageLink` / `@StorageProp` | 应用级状态管理 |
+| `@LocalStorageLink` / `@LocalStorageProp` | 页面级状态管理 |
 
-### ✂️ 代码片段
-- `entry` - 创建入口组件
-- `comp` - 创建自定义组件
-- `state` - 声明 @State 变量
-- `col` / `row` - 创建布局
-- `list` - 创建列表
-- `btn` - 创建按钮
-- `foreach` - 创建循环
-- 更多...
+#### 状态管理 V2（推荐用于 API 12+）
+| 装饰器 | 说明 |
+|--------|------|
+| `@ComponentV2` | V2 版自定义组件 |
+| `@Local` | 组件内部状态（替代 @State） |
+| `@Param` | 外部输入属性（替代 @Prop） |
+| `@Once` | 仅初始化一次的属性 |
+| `@Event` | 组件事件回调 |
+| `@Monitor` | 状态变化监听（替代 @Watch） |
+| `@Provider` / `@Consumer` | 跨层级数据传递（替代 @Provide/@Consume） |
+| `@Computed` | 计算属性 |
+| `@ObservedV2` / `@Trace` | 深度观察类属性 |
 
-### 🔍 跳转定义
-- 跳转到组件定义
-- 跳转到变量定义
-- 跳转到 @Builder 函数
+详见 [华为官方文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-state-management-overview-0000001774279614)。
 
-### ⚠️ 实时诊断
-- 检测未使用的 @State 变量
-- 更多检测规则（开发中）
+## 可用命令
 
-## 安装使用
+| 命令 | 说明 |
+|------|------|
+| `ArkTS: Hello World` | 测试插件是否正常工作 |
+| `ArkTS: Format Document` | 格式化当前文档 |
+
+## 支持的配置项
+
+以下配置项可在 VS Code 设置中使用：
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `arkts.enableAutoComplete` | `boolean` | `true` | 启用/禁用自动补全功能 |
+| `arkts.enableHover` | `boolean` | `true` | 启用/禁用悬停提示功能 |
+
+## 代码片段
+
+插件提供了丰富的代码片段以提升开发效率：
+
+### V1 代码片段
+| 前缀 | 说明 |
+|------|------|
+| `entry` | 创建 @Entry 入口组件 |
+| `comp` | 创建 @Component 自定义组件 |
+| `state` | 声明 @State 状态变量 |
+| `prop` | 声明 @Prop 属性 |
+| `link` | 声明 @Link 双向绑定 |
+| `builder` | 创建 @Builder 函数 |
+| `styles` | 创建 @Styles 样式函数 |
+| `col` / `row` | 创建 Column/Row 布局 |
+| `list` | 创建 List 列表 |
+| `foreach` | 创建 ForEach 循环 |
+| `btn` | 创建 Button 按钮 |
+
+### V2 代码片段（API 12+）
+| 前缀 | 说明 |
+|------|------|
+| `entryv2` | 创建 V2 版入口组件 |
+| `compv2` | 创建 @ComponentV2 组件 |
+| `local` | 声明 @Local 状态 |
+| `param` | 声明 @Param 参数 |
+| `event` | 声明 @Event 事件 |
+| `monitor` | 创建 @Monitor 监听 |
+| `computed` | 创建 @Computed 计算属性 |
+| `provider` / `consumer` | 创建跨层级数据传递 |
+
+## 代码导航
+
+插件支持以下代码导航功能：
+
+- **跳转到定义**（`F12` 或 `Ctrl+Click`）
+  - 跳转到组件（struct）定义
+  - 跳转到变量/常量定义
+  - 跳转到函数/方法定义
+  - 跳转到 @Builder 函数定义
+  - 跳转到 @Styles 样式定义
+  - 跳转到成员变量定义
+
+- **查看定义**（`Alt+F12`）
+  - 在弹出窗口中预览定义
+
+详细信息请参阅 [代码导航文档](docs/CODE_NAVIGATION.md)。
+
+## 安装
+
+### 从 VSIX 安装
+
+1. 下载最新的 `.vsix` 文件
+2. 在 VS Code 中，打开命令面板（`Ctrl+Shift+P`）
+3. 输入 `Install from VSIX` 并选择下载的文件
 
 ### 开发模式
 
 1. 克隆项目并安装依赖：
 ```bash
+git clone https://github.com/FadingLight9291117/vscode-arkts.git
+cd arkts-vscode-plugin
 npm install
 ```
 
@@ -52,73 +144,94 @@ npm install
 npm run compile
 ```
 
-3. 按 F5 启动调试，会打开一个新的 VS Code 窗口（扩展开发宿主）
+3. 按 `F5` 启动调试，会打开一个新的 VS Code 扩展开发宿主窗口
 
-4. 在新窗口中打开一个 `.ets` 文件即可测试插件功能
+4. 在新窗口中打开 `.ets` 文件即可测试插件功能
 
 ### 打包发布
 
-1. 安装 vsce 工具：
 ```bash
+# 安装 vsce 工具
 npm install -g @vscode/vsce
-```
 
-2. 打包插件：
-```bash
+# 打包插件
 vsce package
-```
 
-3. 生成 `.vsix` 文件，可以手动安装或发布到 VS Code 市场
+# 生成 .vsix 文件
+```
 
 ## 项目结构
 
 ```
 arkts-vscode-plugin/
-├── package.json              # 插件配置
-├── tsconfig.json             # TypeScript 配置
-├── language-configuration.json # 语言配置
+├── package.json                  # 插件清单配置
+├── tsconfig.json                 # TypeScript 配置
+├── language-configuration.json   # 语言配置（括号匹配、注释等）
 ├── syntaxes/
-│   └── arkts.tmLanguage.json # 语法高亮规则
+│   └── arkts.tmLanguage.json     # TextMate 语法高亮规则
 ├── snippets/
-│   └── arkts.json           # 代码片段
+│   └── arkts.json                # 代码片段定义
+├── docs/
+│   └── CODE_NAVIGATION.md        # 代码导航功能文档
+├── examples/
+│   └── demo.ets                  # 示例代码
 └── src/
-    ├── extension.ts          # 插件入口
+    ├── extension.ts              # 插件入口点
     └── providers/
-        ├── completionProvider.ts   # 代码补全
-        ├── hoverProvider.ts        # 悬停提示
-        └── definitionProvider.ts   # 定义跳转
+        ├── completionProvider.ts # 代码补全提供器
+        ├── hoverProvider.ts      # 悬停文档提供器
+        └── definitionProvider.ts # 定义跳转提供器
 ```
 
-## 扩展开发
+## 问题排查
 
-### 添加新的装饰器补全
+1. **插件未激活**
+   - 确保打开的文件扩展名为 `.ets`
+   - 检查 VS Code 版本是否 >= 1.85.0
 
-编辑 `src/providers/completionProvider.ts`，在 `decorators` 数组中添加：
+2. **语法高亮不正确**
+   - 尝试重新加载窗口（`Ctrl+Shift+P` → `Reload Window`）
 
-```typescript
-{ name: '@NewDecorator', description: '新装饰器描述' },
-```
+3. **智能提示无响应**
+   - 检查 `arkts.enableAutoComplete` 设置是否启用
 
-### 添加新的组件
+如遇其他问题，请[提交 Issue](https://github.com/your-username/arkts-vscode-plugin/issues)。
 
-编辑 `src/providers/completionProvider.ts`，在 `components` 数组中添加：
+## 贡献指南
 
-```typescript
-{ name: 'NewComponent', description: '新组件描述', snippet: 'NewComponent()' },
-```
+这是一个开源项目，欢迎任何形式的贡献！
 
-### 添加悬停文档
+### 如何贡献
 
-编辑 `src/providers/hoverProvider.ts`，在 `decoratorDocs` 或 `componentDocs` 中添加。
+1. Fork 本仓库
+2. 创建功能分支（`git checkout -b feature/AmazingFeature`）
+3. 提交更改（`git commit -m 'Add some AmazingFeature'`）
+4. 推送到分支（`git push origin feature/AmazingFeature`）
+5. 提交 Pull Request
 
-### 添加代码片段
+### 开发指南
 
-编辑 `snippets/arkts.json`，添加新的代码片段。
+- **添加新装饰器补全**：编辑 `src/providers/completionProvider.ts`
+- **添加悬停文档**：编辑 `src/providers/hoverProvider.ts`
+- **添加代码片段**：编辑 `snippets/arkts.json`
+- **修改语法高亮**：编辑 `syntaxes/arkts.tmLanguage.json`
 
-## 贡献
+## 反馈
 
-欢迎提交 Issue 和 Pull Request！
+- 💬 有问题？请[提交 Issue](https://github.com/your-username/arkts-vscode-plugin/issues)
+- 💡 有建议？欢迎[提交 PR](https://github.com/your-username/arkts-vscode-plugin/pulls)
+- ⭐ 觉得有用？欢迎 Star 支持！
+
+## 相关资源
+
+- [HarmonyOS 开发者文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-dev-guide-V5)
+- [ArkTS 语言介绍](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-get-started-0000001774279582)
+- [状态管理概述](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-state-management-overview-0000001774279614)
+
+## 更新日志
+
+详见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 许可证
 
-MIT
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
