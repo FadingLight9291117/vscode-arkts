@@ -164,6 +164,20 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 - [ ] 支持增量解析
 - [ ] 完整的作用域分析
 
+### AI 增强（MCP 集成）
+- [ ] 实现 MCP Server 支持
+  - 提供工具：获取组件列表、分析装饰器使用、检查代码规范
+  - 提供资源：访问项目文件、读取组件定义
+  - 让 AI 助手（Claude Desktop 等）能深入理解 ArkTS 项目
+- [ ] 提供 AI 驱动的代码导航
+  - 智能代码搜索（基于语义而非文本）
+  - 上下文感知的定义跳转
+  - 智能重构建议
+- [ ] 实现 AI 代码生成工具
+  - 基于现有代码风格生成新组件
+  - 自动补全装饰器和生命周期方法
+  - 智能推断状态管理模式（V1/V2）
+
 ---
 
 ## 7. 实现优先级建议
@@ -178,10 +192,77 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 | P2 | DocumentHighlightProvider | 辅助阅读 |
 | P3 | WorkspaceSymbolProvider | 大型项目需要 |
 | P3 | LSP 重构 | 长期架构优化 |
+| P4 | MCP 集成 | AI 增强功能，提升开发体验 |
 
 ---
 
-## 8. 相关文件
+## 8. MCP 集成详细规划
+
+### 8.1 MCP Server 能力
+
+作为 MCP 服务器，插件可以向 AI 助手暴露以下工具和资源：
+
+#### 工具（Tools）
+```typescript
+// 获取项目中所有组件
+tool: "list_components"
+  → 返回所有 @Entry/@Component/@ComponentV2 组件列表
+
+// 分析装饰器使用
+tool: "check_decorator_usage"
+  → 检查 V1/V2 装饰器混用、未使用的状态变量等
+
+// 生成组件代码
+tool: "generate_component" 
+  → 根据需求生成符合项目规范的 ArkTS 组件
+
+// 代码规范检查
+tool: "lint_arkts_code"
+  → 检查代码是否符合 ArkTS 最佳实践
+```
+
+#### 资源（Resources）
+```typescript
+// 访问工作区文件
+resource: "file:///{path}.ets"
+  → 读取 .ets 文件内容
+
+// 组件定义
+resource: "component:///{ComponentName}"
+  → 获取特定组件的完整定义和文档
+
+// 项目结构
+resource: "workspace:///structure"
+  → 获取项目目录结构和文件组织
+```
+
+### 8.2 应用场景
+
+**场景 1: AI 代码审查**
+```
+用户: "检查我的组件是否有问题"
+AI → 调用 check_decorator_usage
+AI → 分析结果并给出改进建议
+```
+
+**场景 2: 智能代码生成**
+```
+用户: "帮我创建一个用户列表组件"
+AI → 调用 list_components 了解项目风格
+AI → 调用 generate_component 生成代码
+AI → 返回符合项目规范的组件
+```
+
+**场景 3: 快速查找和理解**
+```
+用户: "这个项目有哪些页面入口？"
+AI → 调用 list_components 筛选 @Entry
+AI → 返回所有入口组件及其路由
+```
+
+---
+
+## 9. 相关文件
 
 | 文件 | 说明 |
 |------|------|

@@ -228,6 +228,33 @@ arkts-vscode-plugin/
 - [ArkTS 语言介绍](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-get-started-0000001774279582)
 - [状态管理概述](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-state-management-overview-0000001774279614)
 
+## 未来规划
+
+我们计划持续改进插件，以下是一些规划中的功能：
+
+### 代码导航增强
+- 跨文件定义跳转（import 解析）
+- 查找所有引用（Find All References）
+- 符号重命名（Rename）
+- 文档大纲（DocumentSymbolProvider）
+- 工作区符号搜索
+
+### AI 集成
+- **MCP（Model Context Protocol）支持**
+  - 作为 MCP 服务器：让 AI 助手（如 Claude Desktop）能访问和分析 ArkTS 项目
+  - 提供专业工具：组件分析、装饰器检查、代码生成
+  - 智能代码助手：基于项目上下文的代码建议
+- AI 驱动的代码补全和重构建议
+
+### 其他功能
+- 代码格式化器（Formatter）
+- 更多诊断规则（Linter）
+- 测试支持
+- 调试器集成
+- LSP（Language Server Protocol）架构重构
+
+欢迎在 [Issues](https://github.com/FadingLight9291117/vscode-arkts/issues) 中提出您的需求和建议！
+
 ## 更新日志
 
 详见 [CHANGELOG.md](CHANGELOG.md)。
