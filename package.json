@@ -2,7 +2,7 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support",
   "description": "ArkTS (HarmonyOS) language support with syntax highlighting, code completion, hover documentation and more",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "publisher": "cheliangzhao",
   "author": {
     "name": "车亮召"
