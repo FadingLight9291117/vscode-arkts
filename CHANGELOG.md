@@ -2,6 +2,24 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.1.1] - 2026-01-19
+
+### 新增
+- **Find All References 功能**
+  - 支持 `Shift+F12` 查找当前文件内所有引用
+  - 支持 struct、class、interface、type、enum、function、变量、方法
+  - 支持精确单词匹配
+  - 支持选择是否包含定义位置
+
+- **跨模块 import 跳转**
+  - 支持 `import { X } from '@wps/module'` 包名跳转
+  - 支持解析 oh-package.json5 中的 `file:` 协议
+  - 支持读取目标模块的 `main` 入口字段
+  - 向上查找 oh-package.json5（最多10层）
+
+### 改进
+- 方法跳转正则增强：支持 private/public/protected、async、返回类型
+
 ## [1.1.0] - 2026-01-19
 
 ### 新增

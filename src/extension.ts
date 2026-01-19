@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { ArkTSCompletionProvider } from './providers/completionProvider';
 import { ArkTSHoverProvider } from './providers/hoverProvider';
 import { ArkTSDefinitionProvider } from './providers/definitionProvider';
+import { ArkTSReferenceProvider } from './providers/referenceProvider';
 
 // 插件激活时调用
 export function activate(context: vscode.ExtensionContext) {
@@ -27,6 +28,12 @@ export function activate(context: vscode.ExtensionContext) {
     const definitionProvider = vscode.languages.registerDefinitionProvider(
         arktsSelector,
         new ArkTSDefinitionProvider()
+    );
+
+    // 注册引用查找提供器
+    const referenceProvider = vscode.languages.registerReferenceProvider(
+        arktsSelector,
+        new ArkTSReferenceProvider()
     );
 
     // 注册命令
@@ -64,6 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
         completionProvider,
         hoverProvider,
         definitionProvider,
+        referenceProvider,
         helloWorldCommand,
         formatCommand,
         diagnosticCollection,

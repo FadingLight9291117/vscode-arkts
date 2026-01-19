@@ -86,7 +86,8 @@ export class ArkTSDefinitionProvider implements vscode.DefinitionProvider {
         }
 
         // 查找方法定义 (类/struct 内的方法)
-        const methodRegex = new RegExp(`^\\s*${word}\\s*\\([^)]*\\)\\s*\\{`, 'gm');
+        // 支持：methodName()、private methodName()、async methodName()、methodName(): void
+        const methodRegex = new RegExp(`^\\s*(?:private|public|protected)?\\s*(?:async)?\\s*${word}\\s*\\([^)]*\\)(?:\\s*:\\s*[\\w<>\\[\\]|]+)?\\s*\\{`, 'gm');
         match = methodRegex.exec(text);
         if (match) {
             return createLocationForWord(match.index, match[0]);
@@ -250,8 +251,118 @@ export class ArkTSDefinitionProvider implements vscode.DefinitionProvider {
             return null;
         }
 
-        // 绝对路径或 node_modules（暂不支持）
+        // 包名（如 @wps/support_res 或 dayjs）
+        // 查找 oh-package.json5 中的依赖配置
+        const packagePath = await this.resolvePackagePath(document.uri.fsPath, importPath);
+        if (packagePath) {
+            return vscode.Uri.file(packagePath);
+        }
+
         return null;
+    }
+
+    /**
+     * 解析包名到实际文件路径
+     * 支持 oh-package.json5 中的 file: 协议
+     */
+    private async resolvePackagePath(currentFilePath: string, packageName: string): Promise<string | null> {
+        // 向上查找 oh-package.json5
+        const ohPackagePath = this.findOhPackageJson5(currentFilePath);
+        if (!ohPackagePath) {
+            return null;
+        }
+
+        try {
+            // 读取并解析 oh-package.json5
+            const content = fs.readFileSync(ohPackagePath, 'utf-8');
+            const packageJson = this.parseJson5(content);
+            
+            if (!packageJson || !packageJson.dependencies) {
+                return null;
+            }
+
+            // 查找包的配置
+            const packageConfig = packageJson.dependencies[packageName];
+            if (!packageConfig || typeof packageConfig !== 'string') {
+                return null;
+            }
+
+            // 解析 file: 协议
+            if (packageConfig.startsWith('file:')) {
+                const relativePath = packageConfig.substring(5); // 移除 'file:'
+                const ohPackageDir = path.dirname(ohPackagePath);
+                const targetDir = path.resolve(ohPackageDir, relativePath);
+                
+                // 查找目标模块的 oh-package.json5
+                const targetOhPackage = path.join(targetDir, 'oh-package.json5');
+                if (fs.existsSync(targetOhPackage)) {
+                    const targetContent = fs.readFileSync(targetOhPackage, 'utf-8');
+                    const targetJson = this.parseJson5(targetContent);
+                    
+                    if (targetJson && targetJson.main) {
+                        // 返回入口文件路径
+                        return path.join(targetDir, targetJson.main);
+                    }
+                }
+                
+                // 如果没有 main 字段，尝试默认的 index.ets
+                const indexPath = path.join(targetDir, 'index.ets');
+                if (fs.existsSync(indexPath)) {
+                    return indexPath;
+                }
+            }
+
+            // TODO: 支持 npm registry 包解析（从 node_modules 查找）
+            
+        } catch (error) {
+            console.error('解析 oh-package.json5 失败:', error);
+        }
+
+        return null;
+    }
+
+    /**
+     * 向上查找 oh-package.json5 文件
+     */
+    private findOhPackageJson5(startPath: string): string | null {
+        let currentDir = path.dirname(startPath);
+        
+        // 最多向上查找 10 层
+        for (let i = 0; i < 10; i++) {
+            const packagePath = path.join(currentDir, 'oh-package.json5');
+            if (fs.existsSync(packagePath)) {
+                return packagePath;
+            }
+            
+            const parentDir = path.dirname(currentDir);
+            if (parentDir === currentDir) {
+                // 已到达根目录
+                break;
+            }
+            currentDir = parentDir;
+        }
+        
+        return null;
+    }
+
+    /**
+     * 简单的 JSON5 解析器
+     * 移除注释后使用标准 JSON.parse
+     */
+    private parseJson5(content: string): any {
+        try {
+            // 移除单行注释
+            let cleaned = content.replace(/\/\/.*$/gm, '');
+            // 移除块注释
+            cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '');
+            // 移除尾随逗号
+            cleaned = cleaned.replace(/,(\s*[}\]])/g, '$1');
+            
+            return JSON.parse(cleaned);
+        } catch (error) {
+            console.error('JSON5 解析失败:', error);
+            return null;
+        }
     }
 
     /**

@@ -115,10 +115,10 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 | enum 枚举跳转 | ✅ | ⭐⭐ | `enum Color { Red, Green }` |
 | 泛型类型跳转 | ❌ | ⭐ | `Array<T>` 中的 T |
 
-### 4.3 引用查找
+### 4.3 引用查找 ✅ 部分实现
 | 功能 | 状态 | VS Code API | 说明 |
 |------|------|-------------|------|
-| Find All References | ❌ | `ReferenceProvider` | 查找所有引用位置 |
+| Find All References | ✅ | `ReferenceProvider` | 查找当前文件内所有引用（Shift+F12） |
 | Peek Definition | ✅ | 已有 DefinitionProvider | 预览定义（自动支持） |
 | Go to Implementation | ❌ | `ImplementationProvider` | 跳转到实现 |
 | Go to Type Definition | ❌ | `TypeDefinitionProvider` | 跳转到类型定义 |
