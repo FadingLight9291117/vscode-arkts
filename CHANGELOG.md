@@ -2,6 +2,28 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.0.5] - 2026-01-19
+
+### 修复
+- 修复 VS Code Marketplace 发布错误（移除无效 categories）
+
+## [1.0.4] - 2026-01-19
+
+### 修复
+- 修复 package.json categories 配置错误
+- 移除自定义类别（ArkTs, HarmonyOS, OpenHarmony）
+- 只保留 VS Code Marketplace 支持的标准类别
+
+## [1.0.3] - 2026-01-19
+
+### 文档
+- 添加未来规划章节到 README
+- 详细规划 MCP（Model Context Protocol）集成
+  - MCP Server 能力设计：组件分析、代码生成、规范检查
+  - 应用场景：AI 代码审查、智能生成、快速查找
+  - 工具和资源规划
+- 更新 CODE_NAVIGATION.md 添加 AI 增强路线图
+
 ## [1.0.2] - 2026-01-19
 
 ### 优化
