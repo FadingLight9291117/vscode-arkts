@@ -31,9 +31,6 @@
     "vscode": "^1.85.0"
   },
   "categories": [
-    "ArkTs",
-    "HarmonyOS",
-    "OpenHarmony",
     "Programming Languages",
     "Snippets",
     "Formatters"
