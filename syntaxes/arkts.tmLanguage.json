@@ -8,6 +8,7 @@
     { "include": "#decorators" },
     { "include": "#keywords" },
     { "include": "#types" },
+    { "include": "#operators" },
     { "include": "#arkts-specific" },
     { "include": "#functions" },
     { "include": "#variables" },
@@ -113,6 +114,46 @@
         {
           "name": "entity.name.type.arkts",
           "match": "\\b([A-Z][a-zA-Z0-9_]*)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "storage.type.function.arrow.arkts",
+          "match": "=>"
+        },
+        {
+          "name": "keyword.operator.comparison.arkts",
+          "match": "(===|!==|==|!=|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.arkts",
+          "match": "(&&|\\|\\||!)"
+        },
+        {
+          "name": "keyword.operator.assignment.arkts",
+          "match": "(=|\\+=|-=|\\*=|/=|%=|\\*\\*=|<<=|>>=|>>>=|&=|\\|=|\\^=)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.arkts",
+          "match": "(\\+\\+|--|\\+|-|\\*|/|%|\\*\\*)"
+        },
+        {
+          "name": "keyword.operator.bitwise.arkts",
+          "match": "(&|\\||\\^|~|<<|>>|>>>)"
+        },
+        {
+          "name": "keyword.operator.ternary.arkts",
+          "match": "(\\?|:)"
+        },
+        {
+          "name": "keyword.operator.optional.arkts",
+          "match": "(\\?\\.)"
+        },
+        {
+          "name": "keyword.operator.nullish.arkts",
+          "match": "(\\?\\?)"
         }
       ]
     },

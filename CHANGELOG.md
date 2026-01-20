@@ -2,6 +2,22 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.3.0] - 2026-01-20
+
+### 新增
+- 代码片段重构
+  - 将代码片段拆分为 4 个分类文件，便于管理和扩展
+  - `snippets/arkts/basic.json` - 基础组件和装饰器（Entry、Component、Dialog、State、Prop、Link、Watch、Builder）
+  - `snippets/arkts/ui.json` - UI 组件（Column、Row、Text、Button、Image、List、ForEach、TextInput）
+  - `snippets/arkts/v2.json` - V2 状态管理（ComponentV2、Local、Param、Event、Monitor、Provider、Consumer、Computed、ObservedV2）
+  - `snippets/arkts/api.json` - API 调用（HTTP Request）
+
+### 改进
+- 语法高亮增强
+  - 新增箭头函数 `=>` 语法高亮支持
+  - 新增运算符高亮支持（比较、逻辑、赋值、算术、位运算、三元、可选链、空值合并）
+  - 优化代码可读性和视觉体验
+
 ## [1.2.9] - 2026-01-20
 
 ### 优化
