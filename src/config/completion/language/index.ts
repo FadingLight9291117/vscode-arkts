@@ -3,9 +3,4 @@
  */
 
 export { DECORATORS } from './decorators';
-export {
-    KEYWORDS,
-    KEYWORDS_COMMON,
-    KEYWORDS_ARKTS_ONLY,
-    KEYWORDS_FULL,
-} from './keywords';
+export { KEYWORDS_FULL } from './keywords';

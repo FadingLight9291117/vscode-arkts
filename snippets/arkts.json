@@ -190,24 +190,6 @@
     ],
     "description": "创建一个自定义对话框"
   },
-  "aboutToAppear Lifecycle": {
-    "prefix": "appear",
-    "body": [
-      "aboutToAppear() {",
-      "  ${1:// 组件即将出现时执行}",
-      "}"
-    ],
-    "description": "aboutToAppear 生命周期方法"
-  },
-  "aboutToDisappear Lifecycle": {
-    "prefix": "disappear",
-    "body": [
-      "aboutToDisappear() {",
-      "  ${1:// 组件即将销毁时执行}",
-      "}"
-    ],
-    "description": "aboutToDisappear 生命周期方法"
-  },
   "HTTP Request": {
     "prefix": "http",
     "body": [

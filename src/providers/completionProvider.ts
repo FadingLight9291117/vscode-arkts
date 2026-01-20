@@ -6,9 +6,7 @@ import {
     IMPORT_SNIPPETS,
     COMPONENT_LIFECYCLE_SNIPPETS,
     UIABILITY_LIFECYCLE_SNIPPETS,
-    KEYWORDS_COMMON,
     KEYWORDS_FULL,
-    KEYWORDS_ARKTS_ONLY,
 } from '../config';
 
 /**
@@ -214,14 +212,7 @@ export class ArkTSCompletionProvider implements vscode.CompletionItemProvider {
             return [];
         }
 
-        const mode = config.get<'common' | 'full' | 'arkts'>('completion.keywordMode', 'common');
-        const keywords = mode === 'full'
-            ? KEYWORDS_FULL
-            : mode === 'arkts'
-                ? KEYWORDS_ARKTS_ONLY
-                : KEYWORDS_COMMON;
-
-        return keywords.map(kw => {
+        return KEYWORDS_FULL.map(kw => {
             const item = new vscode.CompletionItem(
                 kw.name,
                 vscode.CompletionItemKind.Keyword

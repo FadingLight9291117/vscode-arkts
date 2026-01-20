@@ -2,6 +2,21 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.2.8] - 2026-01-20
+
+### 优化
+- 简化关键字补全配置
+  - 统一使用 `KEYWORDS_FULL` 作为唯一关键字导出
+  - 移除 `arkts.completion.keywordMode` 配置项，简化用户配置
+  - 移除向后兼容的冗余导出（KEYWORDS, KEYWORDS_COMMON, KEYWORDS_ARKTS_ONLY）
+  - 将 ArkTS 不推荐/不支持的关键字移至列表末尾，优化补全体验
+- 优化代码片段职责分工
+  - 移除 snippets/arkts.json 中的生命周期方法定义
+  - 生命周期补全由 CompletionProvider 统一提供，支持智能上下文感知
+  - 避免重复补全项，符合 VS Code 官方最佳实践
+- 修正模块导入路径
+  - 统一旧目录结构中的类型导入路径，指向 completion/types.ts
+
 ## [1.2.7] - 2026-01-20
 
 ### 改进
