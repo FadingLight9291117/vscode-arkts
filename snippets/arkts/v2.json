@@ -1,0 +1,116 @@
+{
+  "Entry Component V2": {
+    "prefix": "entryv2",
+    "body": [
+      "@Entry",
+      "@ComponentV2",
+      "struct ${1:PageName} {",
+      "  @Local message: string = '${2:Hello World}'",
+      "",
+      "  build() {",
+      "    Column() {",
+      "      Text(this.message)",
+      "        .fontSize(20)",
+      "        .onClick(() => {",
+      "          this.message = '${3:Clicked!}'",
+      "        })",
+      "    }",
+      "    .width('100%')",
+      "    .height('100%')",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个 V2 入口组件 (API 12+)"
+  },
+  "Component V2": {
+    "prefix": "compv2",
+    "body": [
+      "@ComponentV2",
+      "struct ${1:ComponentName} {",
+      "  @Param ${2:title}: string = ''",
+      "  @Event ${3:onAction}: () => void = () => {}",
+      "",
+      "  build() {",
+      "    Column() {",
+      "      Text(this.${2:title})",
+      "      Button('Action')",
+      "        .onClick(() => this.${3:onAction}())",
+      "    }",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个 V2 自定义组件 (API 12+)"
+  },
+  "Local Variable V2": {
+    "prefix": "local",
+    "body": [
+      "@Local ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个 @Local 内部状态变量 (V2)"
+  },
+  "Param Variable V2": {
+    "prefix": "param",
+    "body": [
+      "@Param ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个 @Param 输入参数 (V2)"
+  },
+  "Event V2": {
+    "prefix": "event",
+    "body": [
+      "@Event ${1:eventName}: (${2:param}: ${3:string}) => void = (${2:param}) => {}"
+    ],
+    "description": "声明一个 @Event 输出事件 (V2)"
+  },
+  "Monitor V2": {
+    "prefix": "monitor",
+    "body": [
+      "@Monitor('${1:propertyName}')",
+      "on${1/(.*)/${1:/capitalize}/}Change(monitor: IMonitor) {",
+      "  console.log('${1:propertyName} changed from', monitor.value()?.before, 'to', monitor.value()?.now)",
+      "}"
+    ],
+    "description": "创建一个 @Monitor 深度监听器 (V2)"
+  },
+  "Provider V2": {
+    "prefix": "provider",
+    "body": [
+      "@Provider('${1:key}') ${2:variableName}: ${3:string} = ${4:''}"
+    ],
+    "description": "声明一个 @Provider 跨组件共享变量 (V2)"
+  },
+  "Consumer V2": {
+    "prefix": "consumer",
+    "body": [
+      "@Consumer('${1:key}') ${2:variableName}: ${3:string} = ${4:''}"
+    ],
+    "description": "声明一个 @Consumer 消费共享变量 (V2)"
+  },
+  "Computed V2": {
+    "prefix": "computed",
+    "body": [
+      "@Computed",
+      "get ${1:computedName}(): ${2:string} {",
+      "  return ${3:this.value}",
+      "}"
+    ],
+    "description": "创建一个 @Computed 计算属性 (V2)"
+  },
+  "ObservedV2 Class": {
+    "prefix": "observedv2",
+    "body": [
+      "@ObservedV2",
+      "class ${1:ClassName} {",
+      "  @Trace ${2:property}: ${3:string} = ${4:''}",
+      "}"
+    ],
+    "description": "创建一个 V2 可观察类 (深度观测)"
+  },
+  "Param Once V2": {
+    "prefix": "paramonce",
+    "body": [
+      "@Param @Once ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个仅初始化同步的参数 (V2)"
+  }
+}

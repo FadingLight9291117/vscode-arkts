@@ -1,0 +1,89 @@
+{
+  "Column Layout": {
+    "prefix": "col",
+    "body": [
+      "Column({ space: ${1:10} }) {",
+      "  ${2:// children}",
+      "}",
+      ".width(${3:'100%'})",
+      ".height(${4:'100%'})"
+    ],
+    "description": "创建一个 Column 布局"
+  },
+  "Row Layout": {
+    "prefix": "row",
+    "body": [
+      "Row({ space: ${1:10} }) {",
+      "  ${2:// children}",
+      "}",
+      ".width(${3:'100%'})"
+    ],
+    "description": "创建一个 Row 布局"
+  },
+  "Text Component": {
+    "prefix": "text",
+    "body": [
+      "Text(${1:'Hello World'})",
+      "  .fontSize(${2:16})",
+      "  .fontColor(${3:'#000000'})"
+    ],
+    "description": "创建一个 Text 组件"
+  },
+  "Button Component": {
+    "prefix": "btn",
+    "body": [
+      "Button(${1:'Click Me'})",
+      "  .width(${2:120})",
+      "  .height(${3:40})",
+      "  .onClick(() => {",
+      "    ${4:// handle click}",
+      "  })"
+    ],
+    "description": "创建一个 Button 组件"
+  },
+  "Image Component": {
+    "prefix": "img",
+    "body": [
+      "Image(${1:\\$r('app.media.icon')})",
+      "  .width(${2:100})",
+      "  .height(${3:100})",
+      "  .objectFit(ImageFit.${4:Contain})"
+    ],
+    "description": "创建一个 Image 组件"
+  },
+  "List Component": {
+    "prefix": "list",
+    "body": [
+      "List({ space: ${1:10} }) {",
+      "  ForEach(${2:this.items}, (item: ${3:string}, index: number) => {",
+      "    ListItem() {",
+      "      ${4:Text(item)}",
+      "    }",
+      "  })",
+      "}",
+      ".width('100%')"
+    ],
+    "description": "创建一个 List 列表组件"
+  },
+  "ForEach Loop": {
+    "prefix": "foreach",
+    "body": [
+      "ForEach(${1:this.items}, (item: ${2:any}, index: number) => {",
+      "  ${3:// render item}",
+      "}, (item: ${2:any}) => ${4:item.toString()})"
+    ],
+    "description": "创建一个 ForEach 循环"
+  },
+  "TextInput Component": {
+    "prefix": "input",
+    "body": [
+      "TextInput({ placeholder: ${1:'请输入'} })",
+      "  .width(${2:'100%'})",
+      "  .height(${3:40})",
+      "  .onChange((value: string) => {",
+      "    ${4:this.inputValue = value}",
+      "  })"
+    ],
+    "description": "创建一个 TextInput 输入框"
+  }
+}

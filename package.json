@@ -87,7 +87,19 @@
     "snippets": [
       {
         "language": "arkts",
-        "path": "./snippets/arkts.json"
+        "path": "./snippets/arkts/basic.json"
+      },
+      {
+        "language": "arkts",
+        "path": "./snippets/arkts/ui.json"
+      },
+      {
+        "language": "arkts",
+        "path": "./snippets/arkts/v2.json"
+      },
+      {
+        "language": "arkts",
+        "path": "./snippets/arkts/api.json"
       }
     ],
     "commands": [

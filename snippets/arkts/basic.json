@@ -1,0 +1,106 @@
+{
+  "Entry Component": {
+    "prefix": "entry",
+    "body": [
+      "@Entry",
+      "@Component",
+      "struct ${1:PageName} {",
+      "  build() {",
+      "    Column() {",
+      "      ${2:// UI components here}",
+      "    }",
+      "    .width('100%')",
+      "    .height('100%')",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个入口组件"
+  },
+  "Component": {
+    "prefix": "comp",
+    "body": [
+      "@Component",
+      "struct ${1:ComponentName} {",
+      "  build() {",
+      "    ${2:Column() \\{}",
+      "      ${3:// UI components here}",
+      "    ${2/.*(\\().*/$1 ? '}' : ''}",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个自定义组件"
+  },
+  "Custom Dialog": {
+    "prefix": "dialog",
+    "body": [
+      "@CustomDialog",
+      "struct ${1:MyDialog} {",
+      "  controller: CustomDialogController",
+      "",
+      "  build() {",
+      "    Column() {",
+      "      Text('${2:Dialog Content}')",
+      "        .fontSize(20)",
+      "      ",
+      "      Row() {",
+      "        Button('取消')",
+      "          .onClick(() => {",
+      "            this.controller.close()",
+      "          })",
+      "        Button('确定')",
+      "          .onClick(() => {",
+      "            ${3:// confirm action}",
+      "            this.controller.close()",
+      "          })",
+      "      }",
+      "    }",
+      "    .padding(20)",
+      "  }",
+      "}"
+    ],
+    "description": "创建一个自定义对话框"
+  },
+  "State Variable": {
+    "prefix": "state",
+    "body": [
+      "@State ${1:variableName}: ${2:string} = ${3:''}"
+    ],
+    "description": "声明一个 @State 状态变量"
+  },
+  "Prop Variable": {
+    "prefix": "prop",
+    "body": [
+      "@Prop ${1:variableName}: ${2:string}"
+    ],
+    "description": "声明一个 @Prop 属性"
+  },
+  "Link Variable": {
+    "prefix": "link",
+    "body": [
+      "@Link ${1:variableName}: ${2:string}"
+    ],
+    "description": "声明一个 @Link 双向绑定变量"
+  },
+  "Watch Decorator": {
+    "prefix": "watch",
+    "body": [
+      "@Watch('${1:onPropertyChange}')",
+      "@State ${2:variableName}: ${3:string} = ${4:''}",
+      "",
+      "${1:onPropertyChange}() {",
+      "  ${5:// 监听变化}",
+      "}"
+    ],
+    "description": "创建带 @Watch 监听的状态变量"
+  },
+  "Builder Function": {
+    "prefix": "builder",
+    "body": [
+      "@Builder",
+      "${1:builderName}(${2:params}) {",
+      "  ${3:// UI components}",
+      "}"
+    ],
+    "description": "创建一个 @Builder 函数"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "HTTP Request": {
+    "prefix": "http",
+    "body": [
+      "import http from '@ohos.net.http'",
+      "",
+      "let httpRequest = http.createHttp()",
+      "httpRequest.request(",
+      "  '${1:url}',",
+      "  {",
+      "    method: http.RequestMethod.${2:GET},",
+      "    header: {",
+      "      'Content-Type': 'application/json'",
+      "    }",
+      "  },",
+      "  (err, data) => {",
+      "    if (!err) {",
+      "      ${3:// handle response}",
+      "      console.log('Result: ' + data.result)",
+      "    } else {",
+      "      console.error('Error: ' + JSON.stringify(err))",
+      "    }",
+      "  }",
+      ")"
+    ],
+    "description": "创建一个 HTTP 请求"
+  }
+}
