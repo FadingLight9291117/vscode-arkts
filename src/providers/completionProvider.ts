@@ -6,7 +6,7 @@ import {
     IMPORT_SNIPPETS,
     COMPONENT_LIFECYCLE_SNIPPETS,
     UIABILITY_LIFECYCLE_SNIPPETS,
-    KEYWORDS_FULL,
+    KEYWORDS,
 } from '../config';
 
 /**
@@ -212,7 +212,7 @@ export class ArkTSCompletionProvider implements vscode.CompletionItemProvider {
             return [];
         }
 
-        return KEYWORDS_FULL.map(kw => {
+        return KEYWORDS.map(kw => {
             const item = new vscode.CompletionItem(
                 kw.name,
                 vscode.CompletionItemKind.Keyword

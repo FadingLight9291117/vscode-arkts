@@ -2,11 +2,18 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [1.2.9] - 2026-01-20
+
+### 优化
+- 重命名关键字导出标识符
+  - 将 `KEYWORDS_FULL` 重命名为 `KEYWORDS`，简化命名
+  - 更新所有相关导入和文档说明
+
 ## [1.2.8] - 2026-01-20
 
 ### 优化
 - 简化关键字补全配置
-  - 统一使用 `KEYWORDS_FULL` 作为唯一关键字导出
+  - 统一使用 `KEYWORDS` 作为唯一关键字导出
   - 移除 `arkts.completion.keywordMode` 配置项，简化用户配置
   - 移除向后兼容的冗余导出（KEYWORDS, KEYWORDS_COMMON, KEYWORDS_ARKTS_ONLY）
   - 将 ArkTS 不推荐/不支持的关键字移至列表末尾，优化补全体验

@@ -97,11 +97,7 @@ import { IMPORT_SNIPPETS } from '../config/completion/snippets';
 - 异步：async, await, Promise 等
 - ArkTS 特有：struct, build, aboutToAppear 等
 
-提供多个关键字集合：
-- `KEYWORDS` - 默认集合
-- `KEYWORDS_COMMON` - 常用关键字
-- `KEYWORDS_ARKTS_ONLY` - 仅 ArkTS 特有
-- `KEYWORDS_FULL` - 完整集合（包含所有 TS/JS 特性）
+完整的 TypeScript/ArkTS 关键字集合，包含所有语言特性和 ArkTS 扩展。
 
 ### snippets/imports.ts
 导入语句代码片段：

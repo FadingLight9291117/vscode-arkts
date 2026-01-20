@@ -25,7 +25,7 @@ export { COMPONENTS, ATTRIBUTES } from './ui';
 // 语言特性
 export {
     DECORATORS,
-    KEYWORDS_FULL,
+    KEYWORDS,
 } from './language';
 
 // 代码片段

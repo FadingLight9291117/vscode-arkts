@@ -5,7 +5,7 @@
 import { CompletionItem } from '../types';
 
 // TypeScript/ArkTS 关键字完整列表
-export const KEYWORDS_FULL: CompletionItem[] = [
+export const KEYWORDS: CompletionItem[] = [
     // 声明关键字
     { name: 'const', description: '常量声明', snippet: 'const ${1:name} = ${2:value};' },
     { name: 'let', description: '变量声明', snippet: 'let ${1:name} = ${2:value};' },

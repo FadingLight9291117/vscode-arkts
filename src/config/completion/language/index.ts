@@ -3,4 +3,4 @@
  */
 
 export { DECORATORS } from './decorators';
-export { KEYWORDS_FULL } from './keywords';
+export { KEYWORDS } from './keywords';
