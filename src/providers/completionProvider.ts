@@ -9,7 +9,7 @@ import {
     KEYWORDS_COMMON,
     KEYWORDS_FULL,
     KEYWORDS_ARKTS_ONLY,
-} from '../config/completion.config';
+} from '../config';
 
 /**
  * ArkTS 代码补全提供器

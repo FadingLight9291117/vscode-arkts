@@ -6,4 +6,5 @@ examples/**
 .gitignore
 tsconfig.json
 **/*.map
+**/*.backup
 *.vsix
