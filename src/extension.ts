@@ -4,10 +4,17 @@ import { ArkTSHoverProvider } from './providers/hoverProvider';
 import { ArkTSDefinitionProvider } from './providers/definitionProvider';
 import { ArkTSReferenceProvider } from './providers/referenceProvider';
 import { ArkTSDiagnosticsProvider } from './providers/diagnosticsProvider';
+import { MCPServer } from './mcp/server';
+import { DevicePickerUI } from './mcp/ui/devicePicker';
+import { ProjectInfoUI } from './mcp/ui/projectInfo';
 
 // 插件激活时调用
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     console.log('ArkTS Language Support 插件已激活');
+
+    // 启动 MCP 服务器
+    const mcpServer = new MCPServer();
+    await mcpServer.start();
 
     // 注册语言选择器
     const arktsSelector: vscode.DocumentSelector = { language: 'arkts', scheme: 'file' };
@@ -50,6 +57,18 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    // 注册设备选择命令
+    const devicePickerUI = new DevicePickerUI(mcpServer);
+    const selectDeviceCommand = vscode.commands.registerCommand('arkts.selectDevice', async () => {
+        await devicePickerUI.show();
+    });
+
+    // 注册项目信息命令
+    const projectInfoUI = new ProjectInfoUI(mcpServer);
+    const showProjectInfoCommand = vscode.commands.registerCommand('arkts.showProjectInfo', async () => {
+        await projectInfoUI.show();
+    });
+
     // 实时诊断（Problems 面板提示）
     const diagnosticsProvider = new ArkTSDiagnosticsProvider();
 
@@ -76,12 +95,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 将所有订阅添加到 context.subscriptions
     context.subscriptions.push(
+        mcpServer,
         completionProvider,
         hoverProvider,
         definitionProvider,
         referenceProvider,
         helloWorldCommand,
         formatCommand,
+        selectDeviceCommand,
+        showProjectInfoCommand,
         diagnosticsProvider.collection,
         documentChangeListener,
         documentOpenListener,

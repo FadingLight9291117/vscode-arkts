@@ -166,16 +166,18 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 - [ ] 支持增量解析
 - [ ] 完整的作用域分析
 
-### AI 增强（MCP 集成）
-- [ ] 实现 MCP Server 支持
-  - 提供工具：获取组件列表、分析装饰器使用、检查代码规范
-  - 提供资源：访问项目文件、读取组件定义
-  - 让 AI 助手（Claude Desktop 等）能深入理解 ArkTS 项目
-- [ ] 提供 AI 驱动的代码导航
+### AI 增强（MCP 集成）✅ 已实现（v1.4.0）
+- [x] **实现 MCP Server 支持** - 已完成
+  - ✅ 嵌入式 MCP Server 架构（无需 stdio，内存调用）
+  - ✅ 7 个 HarmonyOS 开发工具（设备、项目、应用管理）
+  - ✅ 双重用途设计（VS Code UI + 外部 AI 调用）
+  - ✅ 集成 `@modelcontextprotocol/sdk` 和 `zod` 类型验证
+  - ✅ 支持 Claude、OpenCode、Copilot、Cursor 等 AI 助手
+- [ ] **提供 AI 驱动的代码导航** - 规划中
   - 智能代码搜索（基于语义而非文本）
   - 上下文感知的定义跳转
   - 智能重构建议
-- [ ] 实现 AI 代码生成工具
+- [ ] **实现 AI 代码生成工具** - 规划中
   - 基于现有代码风格生成新组件
   - 自动补全装饰器和生命周期方法
   - 智能推断状态管理模式（V1/V2）
@@ -194,73 +196,131 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 | P2 | DocumentHighlightProvider | 辅助阅读 |
 | P3 | WorkspaceSymbolProvider | 大型项目需要 |
 | P3 | LSP 重构 | 长期架构优化 |
-| P4 | MCP 集成 | AI 增强功能，提升开发体验 |
+| ~~P4~~ | ~~MCP 集成~~ | ✅ **已完成 (v1.4.0)** |
 
 ---
 
-## 8. MCP 集成详细规划
+## 8. MCP 集成实现 ✅ (v1.4.0)
 
-### 8.1 MCP Server 能力
+### 8.1 已实现的 MCP 工具
 
-作为 MCP 服务器，插件可以向 AI 助手暴露以下工具和资源：
+插件已集成 mcp-harmonyos，向 AI 助手暴露以下 7 个工具：
 
-#### 工具（Tools）
+#### 设备管理工具
 ```typescript
-// 获取项目中所有组件
-tool: "list_components"
-  → 返回所有 @Entry/@Component/@ComponentV2 组件列表
+// 列出所有已连接设备
+tool: "harmonyos_list_devices"
+  → 返回设备列表（ID、型号、系统版本、状态、IP）
 
-// 分析装饰器使用
-tool: "check_decorator_usage"
-  → 检查 V1/V2 装饰器混用、未使用的状态变量等
-
-// 生成组件代码
-tool: "generate_component" 
-  → 根据需求生成符合项目规范的 ArkTS 组件
-
-// 代码规范检查
-tool: "lint_arkts_code"
-  → 检查代码是否符合 ArkTS 最佳实践
+// 获取设备详细信息
+tool: "harmonyos_get_device_info" 
+  args: { deviceId: string }
+  → 返回设备参数（内存、屏幕分辨率、CPU 等）
 ```
 
-#### 资源（Resources）
+#### 项目管理工具
 ```typescript
-// 访问工作区文件
-resource: "file:///{path}.ets"
-  → 读取 .ets 文件内容
+// 获取项目配置信息
+tool: "harmonyos_get_project_info"
+  args: { projectPath: string }
+  → 返回 bundleName、版本、API 版本等
 
-// 组件定义
-resource: "component:///{ComponentName}"
-  → 获取特定组件的完整定义和文档
+// 列出项目所有模块
+tool: "harmonyos_list_modules"
+  args: { projectPath: string }
+  → 返回模块列表及类型（entry/feature/shared）
 
-// 项目结构
-resource: "workspace:///structure"
-  → 获取项目目录结构和文件组织
-```
-
-### 8.2 应用场景
-
-**场景 1: AI 代码审查**
-```
-用户: "检查我的组件是否有问题"
-AI → 调用 check_decorator_usage
-AI → 分析结果并给出改进建议
+// 检查构建产物
+tool: "harmonyos_check_build_outputs"
+  args: { projectPath: string }
+  → 返回 HAP 文件列表、大小、路径
 ```
 
-**场景 2: 智能代码生成**
-```
-用户: "帮我创建一个用户列表组件"
-AI → 调用 list_components 了解项目风格
-AI → 调用 generate_component 生成代码
-AI → 返回符合项目规范的组件
+#### 应用管理工具
+```typescript
+// 列出设备已安装应用
+tool: "harmonyos_list_installed_apps"
+  args: { deviceId: string }
+  → 返回应用列表（bundleName、版本）
+
+// 获取应用详细信息
+tool: "harmonyos_get_app_info"
+  args: { deviceId: string, bundleName: string }
+  → 返回应用版本、权限、安装路径、大小
 ```
 
-**场景 3: 快速查找和理解**
+### 8.2 实际使用场景
+
+**场景 1: 设备管理**
 ```
-用户: "这个项目有哪些页面入口？"
-AI → 调用 list_components 筛选 @Entry
-AI → 返回所有入口组件及其路由
+用户: "我的设备连接了吗？"
+AI → 调用 harmonyos_list_devices
+AI → 返回设备列表和状态
 ```
+
+**场景 2: 项目信息查询**
+```
+用户: "我的项目版本号是多少？"
+AI → 调用 harmonyos_get_project_info
+AI → 返回项目配置信息
+```
+
+**场景 3: 构建验证**
+```
+用户: "我的应用构建成功了吗？"
+AI → 调用 harmonyos_check_build_outputs
+AI → 返回构建产物列表和大小
+```
+
+**场景 4: 应用调试**
+```
+用户: "设备上有我的应用吗？"
+AI → 调用 harmonyos_list_installed_apps
+AI → 调用 harmonyos_get_app_info
+AI → 返回应用状态和详细信息
+```
+
+### 8.3 架构设计
+
+```
+┌──────────────────────────────────────┐
+│      vscode-arkts Extension          │
+│  ┌────────────────────────────────┐  │
+│  │   Embedded MCP Server          │  │
+│  │   (In-Memory, No stdio)        │  │
+│  └────────────┬───────────────────┘  │
+│               │                      │
+│      ┌────────┴────────┐             │
+│      ▼                 ▼             │
+│  ┌─────────┐      ┌─────────┐       │
+│  │VS Code  │      │External │       │
+│  │Commands │      │AI Access│       │
+│  └─────────┘      └─────────┘       │
+└──────────────────────────────────────┘
+
+External AI Access:
+┌──────────────┐  MCP   ┌─────────────┐
+│Claude Desktop│ ◄────► │mcp-harmonyos│
+└──────────────┘        │  (npm pkg)  │
+                        └─────────────┘
+```
+
+### 8.4 技术实现
+
+- **适配层**: `src/mcp/server.ts` 提供 `MCPServer` 类
+- **工具定义**: `src/mcp/tools/` 包含所有工具实现
+- **UI 组件**: `src/mcp/ui/` 提供 VS Code 命令
+- **类型验证**: 使用 `zod` 进行运行时参数验证
+- **命令行封装**: `src/mcp/utils/hdc.ts` 封装 HDC 命令
+
+### 8.5 未来规划
+
+下一步可以添加的工具：
+- [ ] 实时日志查看（`hdc hilog`）
+- [ ] 截图/录屏（`hdc shell snapshot_display`）
+- [ ] 性能分析集成
+- [ ] 代码规范检查工具（ArkTS 最佳实践）
+- [ ] 组件分析工具（装饰器使用、生命周期）
 
 ---
 
