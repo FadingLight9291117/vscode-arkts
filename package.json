@@ -1,7 +1,7 @@
 {
   "name": "arkts-language-support",
-  "displayName": "ArkTS Language Support",
-  "description": "ArkTS (HarmonyOS) language support with syntax highlighting, code completion, hover documentation and more",
+  "displayName": "ArkTS Language Support - AI-Powered HarmonyOS Development",
+  "description": "AI-powered ArkTS language support with MCP integration. Let Claude, Copilot, Cursor, or OpenCode assist your HarmonyOS development - manage devices, analyze projects, and debug apps with natural language.",
   "version": "1.4.0",
   "publisher": "cheliangzhao",
   "author": {
@@ -25,7 +25,16 @@
     "huawei",
     "language",
     "syntax",
-    "highlighting"
+    "highlighting",
+    "mcp",
+    "ai",
+    "claude",
+    "copilot",
+    "cursor",
+    "model-context-protocol",
+    "ai-assistant",
+    "device-management",
+    "openharmony"
   ],
   "engines": {
     "vscode": "^1.85.0"
@@ -110,6 +119,14 @@
       {
         "command": "arkts.formatDocument",
         "title": "ArkTS: Format Document"
+      },
+      {
+        "command": "arkts.selectDevice",
+        "title": "ArkTS: Select HarmonyOS Device"
+      },
+      {
+        "command": "arkts.showProjectInfo",
+        "title": "ArkTS: Show Project Info"
       }
     ],
     "configuration": {
@@ -176,6 +193,10 @@
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
     "package": "vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "18.x",
