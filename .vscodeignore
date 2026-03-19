@@ -1,11 +1,37 @@
+# 开发文件
 .vscode/**
 .vscode-test/**
-out/test/**
 src/**
 examples/**
-.gitignore
+docs/**
+
+# 构建配置
 tsconfig.json
+esbuild.js
+.eslintrc*
+.eslintignore
+
+# Git
+.gitignore
+.gitattributes
+
+# 测试
+out/test/**
+
+# esbuild 已打包所有模块，tsc 分散输出文件不需要
+out/config/**
+out/mcp/**
+out/providers/**
+
+# Source maps
 **/*.map
+
+# 备份和临时文件
 **/*.backup
 *.vsix
+
+# 博客/文档
 blog-*.md
+
+# 依赖（esbuild 已打包所有依赖）
+node_modules/**

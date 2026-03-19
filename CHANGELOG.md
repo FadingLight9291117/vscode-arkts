@@ -2,6 +2,48 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [2.0.1] - 2026-03-19
+
+### 优化
+- 引入 esbuild 打包，VSIX 体积从 12.6 MB 降至 89 KB（减少 99%）
+- 文件数从 3366 个减少至 21 个
+- 构建耗时降至 15ms
+- 将运行时依赖（`@modelcontextprotocol/sdk`、`zod`）移至 devDependencies
+
+## [2.0.0] - 2026-03-19
+
+### 新增
+- **MCP (Model Context Protocol) 集成** - AI 辅助 HarmonyOS 开发
+  - 嵌入式 MCP Server，支持 AI 助手（Claude、OpenCode、Copilot、Cursor）调用
+  - 7 个 HarmonyOS 开发工具：
+    - `harmonyos_list_devices` - 列出所有已连接设备
+    - `harmonyos_get_device_info` - 获取设备详细信息（型号、系统版本、内存等）
+    - `harmonyos_get_project_info` - 获取项目配置信息（bundleName、版本、模块列表）
+    - `harmonyos_list_modules` - 列出项目所有模块及类型（HAP/HSP/HAR）
+    - `harmonyos_check_build_outputs` - 检查构建产物（HAP/HSP 文件、大小）
+    - `harmonyos_list_installed_apps` - 列出设备已安装应用
+    - `harmonyos_get_app_info` - 获取应用详细信息（版本、权限、安装路径）
+  - 双重用途设计：既支持 VS Code 内置 UI，也支持外部 AI 助手调用
+  - 基于 `@modelcontextprotocol/sdk` 实现，支持内存调用（无需 stdio）
+
+- **设备管理 UI**
+  - 新增命令：`ArkTS: Select HarmonyOS Device`
+  - QuickPick 界面显示设备列表，包含设备 ID、型号、系统版本、状态
+
+- **项目信息查看器**
+  - 新增命令：`ArkTS: Show Project Info`
+  - Webview 面板展示完整项目信息（bundleName、版本号、API 版本、模块列表）
+
+### 技术改进
+- 新增 `src/mcp/` 目录，包含 MCP 工具、UI 组件、类型定义、工具函数
+- 集成 `@modelcontextprotocol/sdk@^1.0.4` 和 `zod@^3.24.1`
+- 支持 JSON5 解析（HarmonyOS 配置文件）
+- HDC、hvigorw 等工具链的命令行封装
+
+### 文档更新
+- README 重构为 AI 优先风格，突出 MCP 功能
+- 添加 MCP 工具参考表格和使用场景说明
+
 ## [1.4.0] - 2026-02-20
 
 ### 新增

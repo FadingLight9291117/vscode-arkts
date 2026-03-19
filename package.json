@@ -2,7 +2,7 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support - AI-Powered HarmonyOS Development",
   "description": "AI-powered ArkTS language support with MCP integration. Let Claude, Copilot, Cursor, or OpenCode assist your HarmonyOS development - manage devices, analyze projects, and debug apps with natural language.",
-  "version": "1.4.0",
+  "version": "2.0.1",
   "publisher": "cheliangzhao",
   "author": {
     "name": "车亮召"
@@ -186,27 +186,28 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run bundle -- --production",
+    "compile": "tsc -p ./ --noEmit",
+    "bundle": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
-    "package": "vsce package --no-dependencies"
+    "package": "vsce package"
   },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4",
-    "zod": "^3.24.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
     "@types/node": "18.x",
     "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
+    "esbuild": "^0.27.4",
     "eslint": "^8.56.0",
     "sharp": "^0.34.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.24.1"
   }
 }
