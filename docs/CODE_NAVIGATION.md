@@ -153,10 +153,10 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 ## 6. 技术改进路线
 
 ### 短期改进（正则增强）
-- [ ] 添加 interface/type/enum/class 跳转
-- [ ] 添加跨文件 import 解析（简单路径解析）
+- [x] 添加 interface/type/enum/class 跳转
+- [x] 添加跨文件 import 解析（简单路径解析）
 - [ ] 添加 DocumentSymbolProvider（文档大纲）
-- [ ] 添加 ReferenceProvider（引用查找）
+- [x] 添加 ReferenceProvider（引用查找）
 - [ ] 排除注释区域的匹配
 
 ### 长期改进（AST/LSP）
@@ -188,10 +188,10 @@ const createLocationForWord = (matchIndex: number, matchedText: string): vscode.
 
 | 优先级 | 功能 | 原因 |
 |--------|------|------|
-| P0 | 跨文件 import 跳转 | 最常用功能 |
+| ~~P0~~ | ~~跨文件 import 跳转~~ | ✅ **已完成** |
 | P0 | DocumentSymbolProvider | 提供文档大纲，用户体验提升大 |
-| P1 | interface/type/class 跳转 | 类型系统完整性 |
-| P1 | ReferenceProvider | 查找引用是常用功能 |
+| ~~P1~~ | ~~interface/type/class 跳转~~ | ✅ **已完成** |
+| ~~P1~~ | ~~ReferenceProvider~~ | ✅ **已完成** |
 | P2 | RenameProvider | 重构功能 |
 | P2 | DocumentHighlightProvider | 辅助阅读 |
 | P3 | WorkspaceSymbolProvider | 大型项目需要 |

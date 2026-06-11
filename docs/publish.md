@@ -73,4 +73,6 @@ vsce publish major
 - [ ] 有 `LICENSE` 文件
 - [ ] README 完整
 - [ ] 运行 `npm run compile` 无错误
+- [ ] `.vscodeignore` 已排除 `CLAUDE.md`、`AGENTS.md`、`.claude/` 等开发期文件
+- [ ] `package.json` 版本号已更新，`CHANGELOG.md` 已同步记录
 
