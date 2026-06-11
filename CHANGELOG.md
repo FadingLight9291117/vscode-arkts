@@ -2,6 +2,18 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [2.1.0] - 2026-06-11
+
+### 新增
+- **运行时 MCP 工具集** — AI 现在可以闭环完成"安装 → 启动 → 看日志 → 截图"开发回路：
+  - `harmonyos_install_app` — 通过 `hdc install` 将 HAP 包安装到设备
+  - `harmonyos_launch_app` — 通过 `aa start` 启动应用（默认 `EntryAbility`，支持指定 module/ability）
+  - `harmonyos_tail_hilog` — 抓取 hilog 快照，支持 tag 子串过滤和最低 level 过滤（D/I/W/E/F）
+  - `harmonyos_screenshot` — 调用 `snapshot_display` 截图并拉回主机，默认存到系统临时目录
+
+### 文档
+- README MCP 工具表新增上述 4 个工具
+
 ## [2.0.2] - 2026-06-11
 
 ### 优化

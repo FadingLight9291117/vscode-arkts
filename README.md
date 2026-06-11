@@ -126,6 +126,10 @@ AI 助手可以调用以下工具来帮助你开发 HarmonyOS 应用：
 | `harmonyos_check_build_outputs` | 检查构建输出是否存在 | "构建产物在哪里？" |
 | `harmonyos_list_installed_apps` | 列出设备上所有已安装的应用 | "设备上安装了哪些应用？" |
 | `harmonyos_get_app_info` | 获取应用详细信息（版本、安装时间等） | "查看某个应用的信息" |
+| `harmonyos_install_app` | 安装 HAP 包到设备 | "把刚构建的 HAP 装到设备上" |
+| `harmonyos_launch_app` | 启动设备上的应用（`aa start`） | "启动我的应用" |
+| `harmonyos_tail_hilog` | 抓取设备日志快照（支持按 tag/level 过滤） | "看看最近的错误日志" |
+| `harmonyos_screenshot` | 截取设备屏幕并保存到本地 | "截一张当前屏幕的图" |
 
 ### AI 使用场景示例
 
