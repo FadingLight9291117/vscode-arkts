@@ -2,6 +2,14 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [2.0.2] - 2026-06-11
+
+### 优化
+- 实时诊断加入 250ms 防抖，避免每次按键都触发扫描，减少性能开销
+- 移除无实际功能的占位命令 `ArkTS: Hello World` 和 `ArkTS: Format Document`
+- 清理旧的 `src/config/language/` 和 `src/config/ui/` 遗留文件（已由 `src/config/completion/` 统一管理）
+- VSIX 打包排除 `CLAUDE.md`、`AGENTS.md`、`.claude/` 等开发期配置文件
+
 ## [2.0.1] - 2026-03-19
 
 ### 优化

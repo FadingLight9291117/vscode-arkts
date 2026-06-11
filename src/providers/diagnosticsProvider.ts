@@ -134,8 +134,15 @@ function pushRegexDiagnostics(
 ) {
     let match: RegExpExecArray | null;
     while ((match = regex.exec(maskedText)) !== null) {
-        const startPos = document.positionAt(match.index);
-        const endPos = document.positionAt(match.index + match[0].length);
+        // If the regex has a capture group, use it to scope the diagnostic
+        // range to the relevant token rather than any leading context.
+        const target = match[1];
+        const startIndex = target
+            ? match.index + match[0].indexOf(target)
+            : match.index;
+        const length = target ? target.length : match[0].length;
+        const startPos = document.positionAt(startIndex);
+        const endPos = document.positionAt(startIndex + length);
         const diagnostic = new vscode.Diagnostic(
             new vscode.Range(startPos, endPos),
             message,
@@ -213,11 +220,14 @@ export class ArkTSDiagnosticsProvider {
                 severity
             );
 
+            // Only flag any/unknown in type-annotation positions
+            // (`: any`, `: unknown`, `as any`, `<any>`, etc.) to avoid
+            // false positives on property names or identifiers.
             pushRegexDiagnostics(
                 document,
                 maskedText,
                 diagnostics,
-                /\bany\b/g,
+                /(?:[:<,|&]|\bas|\bextends|\breturns)\s*\(?\s*\b(any)\b/g,
                 "ArkTS 迁移建议避免使用 'any'，请使用更具体的类型",
                 severity
             );
@@ -226,7 +236,7 @@ export class ArkTSDiagnosticsProvider {
                 document,
                 maskedText,
                 diagnostics,
-                /\bunknown\b/g,
+                /(?:[:<,|&]|\bas|\bextends|\breturns)\s*\(?\s*\b(unknown)\b/g,
                 "ArkTS 迁移建议避免使用 'unknown'，请使用更具体的类型",
                 severity
             );

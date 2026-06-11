@@ -6,7 +6,7 @@ import { ToolResponse } from './types/tool';
  * MCP Server for VS Code extension
  * Provides HarmonyOS development tools to the extension and external AI assistants
  */
-export class MCPServer {
+export class MCPServer implements vscode.Disposable {
   private toolMap: Map<string, any>;
 
   constructor() {
@@ -62,9 +62,7 @@ export class MCPServer {
    * Start the MCP server (for VS Code extension context)
    */
   async start() {
-    vscode.window.showInformationMessage(
-      `ArkTS MCP Server started with ${this.toolMap.size} tools`
-    );
+    console.log(`ArkTS MCP Server started with ${this.toolMap.size} tools`);
   }
 
   /**

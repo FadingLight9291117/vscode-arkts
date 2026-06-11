@@ -206,8 +206,6 @@ AI: [综合调用多个工具]
 |------|------|
 | `ArkTS: Select HarmonyOS Device` | 🤖 查看并选择已连接的 HarmonyOS 设备 |
 | `ArkTS: Show Project Info` | 🤖 查看当前项目的详细信息和模块列表 |
-| `ArkTS: Hello World` | 测试插件是否正常工作 |
-| `ArkTS: Format Document` | 格式化当前文档 |
 
 > 🤖 标记的命令使用了 AI 增强功能
 
@@ -290,6 +288,11 @@ vscode-arkts/
 │   └── demo.ets                  # 示例代码
 └── src/
     ├── extension.ts              # 插件入口点
+    ├── config/                   # 补全/悬停数据
+    │   └── completion/
+    │       ├── language/         # 关键字、装饰器
+    │       ├── ui/               # 组件、属性
+    │       └── snippets/         # 代码片段数据
     ├── mcp/                      # 🤖 MCP 服务器（AI 集成）
     │   ├── server.ts             # MCP 服务器实现
     │   ├── tools/                # HarmonyOS 工具集
@@ -322,7 +325,7 @@ vscode-arkts/
 3. **智能提示无响应**
    - 检查 `arkts.enableAutoComplete` 设置是否启用
 
-如遇其他问题，请[提交 Issue](https://github.com/your-username/arkts-vscode-plugin/issues)。
+如遇其他问题，请[提交 Issue](https://github.com/FadingLight9291117/vscode-arkts/issues)。
 
 ## 贡献指南
 
@@ -338,7 +341,8 @@ vscode-arkts/
 
 ### 开发指南
 
-- **添加新装饰器补全**：编辑 `src/providers/completionProvider.ts`
+- **添加新装饰器补全**：编辑 `src/config/completion/language/decorators.ts`
+- **添加 UI 组件/属性补全**：编辑 `src/config/completion/ui/`
 - **添加悬停文档**：编辑 `src/providers/hoverProvider.ts`
 - **添加代码片段**：编辑 `snippets/arkts.json`
 - **修改语法高亮**：编辑 `syntaxes/arkts.tmLanguage.json`
@@ -347,8 +351,8 @@ vscode-arkts/
 
 ## 反馈
 
-- 💬 有问题？请[提交 Issue](https://github.com/your-username/arkts-vscode-plugin/issues)
-- 💡 有建议？欢迎[提交 PR](https://github.com/your-username/arkts-vscode-plugin/pulls)
+- 💬 有问题？请[提交 Issue](https://github.com/FadingLight9291117/vscode-arkts/issues)
+- 💡 有建议？欢迎[提交 PR](https://github.com/FadingLight9291117/vscode-arkts/pulls)
 - ⭐ 觉得有用？欢迎 Star 支持！
 
 ## 相关资源

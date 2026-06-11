@@ -1,5 +1,8 @@
 # 开发文件
 .vscode/**
+CLAUDE.md
+AGENTS.md
+.claude/**
 .vscode-test/**
 src/**
 examples/**
