@@ -26,6 +26,18 @@ out/config/**
 out/mcp/**
 out/providers/**
 
+# 开发依赖不需要打包进 VSIX（运行时不需要）
+node_modules/@types/**
+node_modules/typescript/**
+node_modules/eslint/**
+node_modules/@typescript-eslint/**
+node_modules/@vscode/test-cli/**
+node_modules/@vscode/test-electron/**
+node_modules/esbuild/**
+node_modules/sharp/**
+node_modules/zod/**
+node_modules/@modelcontextprotocol/**
+
 # Source maps
 **/*.map
 
@@ -36,5 +48,4 @@ out/providers/**
 # 博客/文档
 blog-*.md
 
-# 依赖（esbuild 已打包所有依赖）
-node_modules/**
+# vscode-languageclient 和 @arkts/language-server 及其依赖需保留供运行时使用

@@ -119,60 +119,36 @@
       {
         "command": "arkts.showProjectInfo",
         "title": "ArkTS: Show Project Info"
+      },
+      {
+        "command": "arkts.restartServer",
+        "title": "ArkTS: Restart Language Server"
       }
     ],
     "configuration": {
       "title": "ArkTS",
       "properties": {
-        "arkts.enableAutoComplete": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用自动补全功能"
-        },
-        "arkts.completion.enableKeywords": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用关键字补全（const/if/try 等）"
-        },
-        "arkts.completion.enableImportSnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用 HarmonyOS Kit import 模板补全（@kit.* 推荐写法）"
-        },
-        "arkts.completion.enableLifecycleSnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用生命周期回调模板补全（自定义组件/UIAbility）"
-        },
-        "arkts.diagnostics.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用/禁用 ArkTS 实时诊断（Problems 面板提示）"
-        },
-        "arkts.diagnostics.enableUnusedState": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用未使用的 @State 变量提示（简化规则）"
-        },
-        "arkts.diagnostics.enableMigrationRules": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用 TypeScript→ArkTS 迁移建议诊断（如避免 var/any/unknown 等）"
-        },
-        "arkts.diagnostics.severity": {
+        "ets.sdkPath": {
           "type": "string",
-          "default": "warning",
-          "enum": [
-            "information",
-            "warning",
-            "error"
-          ],
-          "description": "诊断严重程度（information/warning/error）"
+          "default": "",
+          "description": "OpenHarmony SDK 路径（对应 DevEco Studio 安装目录下的 sdk/default/openharmony）。更改后语言服务器将自动重启。"
         },
-        "arkts.enableHover": {
-          "type": "boolean",
-          "default": true,
-          "description": "启用悬停提示功能"
+        "ets.hmsPath": {
+          "type": "string",
+          "default": "",
+          "description": "HMS SDK 路径（对应 DevEco Studio 安装目录下的 sdk/default/harmony）。留空则不加载 HMS 类型。"
+        },
+        "ets.linterVersion": {
+          "type": "string",
+          "default": "1.1",
+          "enum": ["1.1", "off"],
+          "description": "ArkTS Linter 版本。设为 off 可禁用 ArkTS 规范检查。"
+        },
+        "ets.resourceReferenceDiagnostic": {
+          "type": "string",
+          "default": "error",
+          "enum": ["error", "warning", "information", "off"],
+          "description": "$r() 资源引用找不到时的诊断级别。"
         }
       }
     }
@@ -187,7 +163,10 @@
     "test": "vscode-test",
     "package": "vsce package"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@arkts/language-server": "^1.3.10",
+    "vscode-languageclient": "^9.0.1"
+  },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "@types/node": "18.x",
