@@ -7,24 +7,42 @@ VS Code extension providing ArkTS (HarmonyOS `.ets`) language support plus Harmo
 ## Commands
 
 - `npm run compile` — typecheck only (`tsc --noEmit`). Produces no output files.
-- `npm run bundle` — esbuild bundles `src/extension.ts` → `out/extension.js` (the only artifact that ships). Append `-- --production` for minified.
+- `npm run bundle` — esbuild bundles `src/extension.ts` → `out/extension.js`. Append `-- --production` for minified.
 - `npm run watch` — esbuild watch mode (default VS Code build task; F5 debug uses it).
 - `npm run package` — `vsce package` (runs production bundle via `vscode:prepublish`).
-- `npm run lint` is **broken**: the `eslint src --ext ts` script exists but no ESLint config file is in the repo. Don't rely on it; don't "fix" it unless asked.
+- `npm run lint` is **broken**: no ESLint config file in the repo. Don't rely on it; don't "fix" it unless asked.
 - `npm test` (`vscode-test`) has no tests behind it — there is no `src/test/`. Verification = `npm run compile` + `npm run bundle`.
 - If `compile` fails with `Cannot find module 'zod'` etc., `node_modules` is stale — run `npm install` first.
 
 ## Architecture (non-obvious parts)
 
-- `src/extension.ts` is the single entrypoint; everything is registered in `activate()`.
-- `src/mcp/` is **not** a real stdio MCP server. `MCPServer` (`src/mcp/server.ts`) is an in-process tool registry (zod-validated handlers in `src/mcp/tools/`) invoked by VS Code commands/UI (`src/mcp/ui/`). Tools shell out synchronously to the `hdc` CLI (`src/mcp/utils/hdc.ts`) — requires HarmonyOS `hdc` on PATH at runtime.
-- Completion/hover data lives in `src/config/completion/` (`ui` / `language` / `snippets` submodules). Import via `from '../config'` (the barrel only re-exports `./completion`). Top-level `src/config/ui/` and `src/config/language/` are legacy duplicates not exported by the barrel.
+- `src/extension.ts` is the single entrypoint; `activate()` starts both the LSP client and the MCP server.
+- **LSP client** (`vscode-languageclient`): connects to `@arkts/language-server` via IPC. The server binary is at `node_modules/@arkts/language-server/bin/ets-language-server.js` (a runtime dep, not bundled). Completion, hover, go-to-definition, references, and diagnostics all come from the LSP — there are no hand-rolled providers in `src/providers/`. Debug port for the language server is 6009.
+- **Required config**: `ets.sdkPath` must point to the OpenHarmony SDK (`sdk/default/openharmony` under DevEco Studio). If unset the LSP does not start and a warning is shown. Changing `ets.sdkPath` auto-restarts the client. `arkts.restartServer` command also restarts it manually.
+- **Custom LSP request** `ets/formatDocument`: the extension registers a `DocumentFormattingEditProvider` that proxies format requests to the language server via this non-standard request. It receives `{ code?, errors? }` and applies a full-document replacement edit.
+- **`src/mcp/`** is **not** a real stdio MCP server. `MCPServer` (`src/mcp/server.ts`) is an in-process tool registry (zod-validated handlers in `src/mcp/tools/`) invoked by VS Code commands/UI (`src/mcp/ui/`). Tools shell out to the `hdc` CLI (`src/mcp/utils/hdc.ts`) — requires HarmonyOS `hdc` on PATH at runtime.
 - Grammars (`syntaxes/`), snippets (`snippets/arkts/*.json`), and language configs are declared in `package.json` `contributes` — edit both sides when adding files there.
 - The extension also registers a `json5` language for HarmonyOS config files (`oh-package.json5`, `module.json5`, etc.).
 - A separate `mcp-harmonyos` npm package exists for external AI assistants (Claude Desktop, Cursor, etc.); this repo only ships the in-process variant.
 
+## Adding an MCP tool
+
+Each tool in `src/mcp/tools/` follows this shape:
+
+```typescript
+const MySchema = z.object({ /* params */ });
+export const myTool: ToolDefinition<typeof MySchema> = {
+  definition: { name: 'harmonyos_my_tool', description: '...', inputSchema: zodToJsonSchema(MySchema) },
+  schema: MySchema,
+  handler: async (args) => { /* return toolResult(data) or toolError(msg) */ },
+};
+```
+
+Use `wrapTool(myTool)` (from `src/mcp/utils/response.ts`) to add automatic try/catch. Register in `src/mcp/tools/index.ts`'s `allTools` array. HDC calls go through `hdcExec` (`src/mcp/utils/hdc.ts`) — default timeout 5 s, pass `{ deviceId }` for `-t` targeting.
+
 ## Gotchas
 
+- `vscode-languageclient` is marked **external** in `esbuild.js` (not bundled) and lives in `dependencies` — it's resolved from `node_modules` at runtime. `@arkts/language-server` is also in `dependencies` and ships verbatim inside the VSIX. Other runtime deps (zod, MCP SDK) remain in `devDependencies` and are bundled by esbuild.
 - `out/` contains only the esbuild bundle; stale `tsc`-emitted subdirs may exist but are ignored (see `.vscodeignore`).
-- All runtime deps (zod, MCP SDK) are in `devDependencies` on purpose — esbuild bundles them; `dependencies` must stay empty or the VSIX bloats.
 - Version bumps go in `package.json` + `CHANGELOG.md`; publishing steps are in `docs/publish.md`.
+- `AGENTS.md` at the repo root is an agent-focused architecture guide; keep it in sync when adding tools or changing the LSP setup.

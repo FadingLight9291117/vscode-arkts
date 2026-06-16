@@ -2,6 +2,30 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [Unreleased] - dev-language_server
+
+### 新增
+- **LSP 语言服务器集成** — 使用 `@arkts/language-server` 替代手写 Provider，补全、悬停、跳转、引用、诊断全部由 LSP 驱动
+  - 新增 `ets/formatDocument` 自定义请求，支持文档格式化
+  - 新增命令 `ArkTS: Restart Language Server` 手动重启语言服务器
+  - 新增配置项 `ets.sdkPath`（必填）、`ets.hmsPath`、`ets.linterVersion`、`ets.resourceReferenceDiagnostic`
+
+- **9 个新 MCP 工具**（工具总数从 11 增至 20）：
+  - `harmonyos_uninstall_app` — 通过 `bm uninstall` 卸载设备上的应用
+  - `harmonyos_clear_app_data` — 清除应用数据/缓存（支持 data/cache/all 三种模式）
+  - `harmonyos_reboot_device` — 重启设备（`hdc target boot`）
+  - `harmonyos_push_file` — 推送本地文件到设备（`hdc file send`）
+  - `harmonyos_pull_file` — 从设备拉取文件到本机（`hdc file recv`，默认存入系统临时目录）
+  - `harmonyos_build` — 调用项目根目录的 `hvigorw` 触发构建（支持 assembleHap/App/Hsp，超时 10 分钟）
+  - `harmonyos_get_crash_logs` — 列出 `/data/log/faultlog/` 崩溃日志，可按 bundleName 过滤并拉取最新一条
+  - `harmonyos_get_app_memory` — 通过 `hidumper --mem` 获取运行中应用的内存报告
+  - `harmonyos_list_dependencies` — 解析项目根目录及各模块 `oh-package.json5` 的依赖树
+
+### 架构变更
+- 移除手写的 `src/providers/`（completion/hover/definition/reference/diagnostics），全部交由 LSP 处理
+- 移除 `src/config/completion/` 补全数据模块
+- `vscode-languageclient` 改为 `external`（不打包），`@arkts/language-server` 作为 runtime dependency 随 VSIX 分发
+
 ## [2.1.0] - 2026-06-11
 
 ### 新增

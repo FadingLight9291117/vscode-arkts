@@ -14,15 +14,16 @@ VS Code extension providing ArkTS (HarmonyOS `.ets`) language support plus Harmo
 
 ## Architecture (non-obvious parts)
 
-- `src/extension.ts` is the single entrypoint; everything is registered in `activate()`.
-- `src/mcp/` is **not** a real stdio MCP server. `MCPServer` (src/mcp/server.ts) is an in-process tool registry (zod-validated handlers in `src/mcp/tools/`) invoked by VS Code commands/UI (`src/mcp/ui/`). Tools shell out synchronously to the `hdc` CLI (`src/mcp/utils/hdc.ts`) — requires HarmonyOS `hdc` on PATH at runtime.
-- Completion/hover data lives in `src/config/completion/` (`ui` / `language` / `snippets` submodules). Import via `from '../config'` (the barrel only re-exports `./completion`).
+- `src/extension.ts` is the single entrypoint; `activate()` starts both the LSP client and the MCP server.
+- **LSP client** (`vscode-languageclient`): connects to `@arkts/language-server` via IPC. The server binary is at `node_modules/@arkts/language-server/bin/ets-language-server.js`. Completion, hover, go-to-definition, references, and diagnostics all come from the LSP — there are no hand-rolled providers in `src/providers/`. Requires `ets.sdkPath` to be set or the LSP won't start.
+- **Custom LSP request** `ets/formatDocument`: the extension registers a `DocumentFormattingEditProvider` that proxies format requests to the language server. Returns `{ code?, errors? }` and applies a full-document replacement.
+- **`src/mcp/`** is **not** a real stdio MCP server. `MCPServer` (`src/mcp/server.ts`) is an in-process tool registry (zod-validated handlers in `src/mcp/tools/`) invoked by VS Code commands/UI (`src/mcp/ui/`). Tools shell out to the `hdc` CLI (`src/mcp/utils/hdc.ts`) — requires HarmonyOS `hdc` on PATH at runtime. Currently 20 tools across 6 files: `devices`, `projects`, `apps`, `build`, `runtime`, `files`, `diagnostics`.
 - Grammars (`syntaxes/`), snippets (`snippets/arkts/*.json`), and language configs are declared in `package.json` `contributes` — edit both sides when adding files there.
 - The extension also registers a `json5` language for HarmonyOS config files (`oh-package.json5`, `module.json5`, etc.).
 
 ## Gotchas
 
 - `out/` contains only the esbuild bundle; stale `tsc`-emitted subdirs may exist but are ignored (see `.vscodeignore`).
-- All runtime deps (zod, MCP SDK) are in `devDependencies` on purpose — esbuild bundles them; `dependencies` must stay empty or the VSIX bloats.
+- `vscode-languageclient` is marked **external** in `esbuild.js` (not bundled) and lives in `dependencies`. `@arkts/language-server` is also in `dependencies` and ships verbatim in the VSIX. Other runtime deps (zod, MCP SDK) stay in `devDependencies` and are bundled.
 - `AGENTS.md`, `CLAUDE.md`, `.claude/` are excluded from VSIX via `.vscodeignore` — they're dev-only and must not ship to users.
 - Version bumps go in `package.json` + `CHANGELOG.md`; publishing steps are in `docs/publish.md`.
