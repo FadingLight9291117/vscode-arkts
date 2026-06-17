@@ -48,11 +48,11 @@
   "contributes": {
     "languages": [
       {
-        "id": "arkts",
+        "id": "ets",
         "aliases": [
           "ArkTS",
-          "arkts",
-          "ets"
+          "ets",
+          "arkts"
         ],
         "extensions": [
           ".ets"
@@ -83,7 +83,7 @@
     ],
     "grammars": [
       {
-        "language": "arkts",
+        "language": "ets",
         "scopeName": "source.arkts",
         "path": "./syntaxes/arkts.tmLanguage.json"
       },
@@ -95,19 +95,19 @@
     ],
     "snippets": [
       {
-        "language": "arkts",
+        "language": "ets",
         "path": "./snippets/arkts/basic.json"
       },
       {
-        "language": "arkts",
+        "language": "ets",
         "path": "./snippets/arkts/ui.json"
       },
       {
-        "language": "arkts",
+        "language": "ets",
         "path": "./snippets/arkts/v2.json"
       },
       {
-        "language": "arkts",
+        "language": "ets",
         "path": "./snippets/arkts/api.json"
       }
     ],

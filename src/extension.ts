@@ -16,8 +16,13 @@ function getSdkPath(): string {
     return vscode.workspace.getConfiguration('ets').get<string>('sdkPath', '');
 }
 
+function getHmsPath(): string {
+    return vscode.workspace.getConfiguration('ets').get<string>('hmsPath', '');
+}
+
 async function startLanguageClient(context: vscode.ExtensionContext): Promise<void> {
     const sdkPath = getSdkPath();
+    const hmsPath = getHmsPath();
     if (!sdkPath) {
         vscode.window.showWarningMessage(
             'ArkTS: 未配置 SDK 路径（ets.sdkPath），语言服务器未启动。',
@@ -46,13 +51,13 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
 
     const clientOptions: LanguageClientOptions = {
         documentSelector: [
-            { language: 'arkts', scheme: 'file' },
+            { language: 'ets', scheme: 'file' },
             { language: 'json', scheme: 'file' },
             { pattern: '**/*.json5', scheme: 'file' },
         ],
         outputChannel: vscode.window.createOutputChannel('ArkTS Language Server'),
         initializationOptions: {
-            ets: { sdkPath },
+            ets: { sdkPath, hmsPath: hmsPath || undefined },
         },
         synchronize: {
             fileEvents: [
@@ -71,7 +76,7 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
 
     // 代理 ets/formatDocument 自定义请求给文档格式化提供器
     context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider('arkts', {
+        vscode.languages.registerDocumentFormattingEditProvider('ets', {
             async provideDocumentFormattingEdits(document) {
                 if (!client?.isRunning()) return [];
                 const result = await client.sendRequest<{ code?: string; errors?: string[] } | undefined>(
@@ -115,7 +120,7 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('arkts.showProjectInfo', () => projectInfoUI.show()),
         vscode.commands.registerCommand('arkts.restartServer', () => restartLanguageClient(context)),
         vscode.workspace.onDidChangeConfiguration(e => {
-            if (e.affectsConfiguration('ets.sdkPath')) {
+            if (e.affectsConfiguration('ets.sdkPath') || e.affectsConfiguration('ets.hmsPath')) {
                 restartLanguageClient(context);
             }
         }),
