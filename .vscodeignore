@@ -48,4 +48,6 @@ node_modules/@modelcontextprotocol/**
 # 博客/文档
 blog-*.md
 
-# vscode-languageclient 和 @arkts/language-server 及其依赖需保留供运行时使用
+# @arkts/language-server：排除 sourcemap 和未使用的 ESM 产物（bin 只加载 index.js）
+node_modules/@arkts/language-server/out/*.map
+# node_modules/@arkts/language-server/out/index.mjs
