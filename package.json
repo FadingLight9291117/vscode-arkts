@@ -2,7 +2,7 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support - AI-Powered HarmonyOS Development",
   "description": "AI-powered ArkTS language support with MCP integration. Let Claude, Copilot, Cursor, or OpenCode assist your HarmonyOS development - manage devices, analyze projects, and debug apps with natural language.",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "publisher": "cheliangzhao",
   "author": {
     "name": "车亮召"
