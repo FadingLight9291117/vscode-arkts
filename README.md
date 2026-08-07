@@ -4,7 +4,7 @@
 [![许可证](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![AI 增强](https://img.shields.io/badge/AI-MCP%20Ready-orange?style=for-the-badge)](https://modelcontextprotocol.io)
 
-为 Visual Studio Code 提供 ArkTS（鸿蒙应用开发语言）完整语言支持，并内置 20 个 MCP 工具，让 Claude、Copilot、Cursor、OpenCode 等 AI 助手直接操作 HarmonyOS 设备和项目。
+为 Visual Studio Code 提供 ArkTS（鸿蒙应用开发语言）完整语言支持：标题栏一键编译/运行、LSP 驱动的补全与诊断，并内置 20 个 MCP 工具，让 Claude、Copilot、Cursor、OpenCode 等 AI 助手直接操作 HarmonyOS 设备和项目。
 
 ![功能演示](images/demo.gif)
 
@@ -15,15 +15,25 @@
 
 > **重要**：`ets.sdkPath` 未配置时语言服务器不会启动，补全、诊断、跳转等功能不可用。
 
+> **按需安装**：插件体积仅约 545 KB——语言服务器（`@arkts/language-server`）在首次激活时自动安装到扩展数据目录，编译/运行所需的 `devecocli` 也会在需要时自动安装，无需手动下载。
+
 ## 快速开始
 
 1. 安装插件
 2. 打开设置（`Ctrl+,`），搜索 `ets.sdkPath`，填入 OpenHarmony SDK 路径
-3. 打开任意 `.ets` 文件，插件自动激活
+3. 打开任意 `.ets` 文件，插件自动激活并安装语言服务器
+4. 点击编辑器标题栏的「编译」「运行」按钮，一键构建并运行应用
 
 需要设备操作时，确保已连接 HarmonyOS 设备或模拟器，然后通过命令面板（`Ctrl+Shift+P` → 输入 `ArkTS`）访问设备管理功能。
 
 ## 功能特性
+
+### 一键编译/运行
+
+- 打开 `.ets` 文件后，编辑器标题栏显示「编译」「运行」按钮
+- **编译** → `devecocli build`；**运行** → `devecocli run`（编译 + 安装 + 启动），输出实时写入 "ArkTS Run" 面板
+- 自动识别项目根（从当前文件向上找 `oh-package.json5`，无需 hvigorw）
+- 首次使用自动安装 `devecocli`（也可通过命令 `ArkTS: 安装 deveco-cli 工具` 手动安装）
 
 ### 语言支持（LSP 驱动）
 
@@ -100,6 +110,9 @@ AI 助手可直接调用以下工具完成 HarmonyOS 开发任务：
 
 | 命令 | 说明 |
 |------|------|
+| `ArkTS: 编译` | 通过 `devecocli build` 编译当前项目（标题栏按钮） |
+| `ArkTS: 运行（编译+安装+启动）` | 通过 `devecocli run` 构建并运行（标题栏按钮） |
+| `ArkTS: 安装 deveco-cli 工具` | 手动安装/重装 `devecocli` |
 | `ArkTS: Select HarmonyOS Device` | 查看并选择已连接的 HarmonyOS 设备 |
 | `ArkTS: Show Project Info` | 查看当前项目的详细信息和模块列表 |
 | `ArkTS: Restart Language Server` | 手动重启 ArkTS 语言服务器 |
@@ -159,8 +172,12 @@ npm install
 
 **语言功能无响应（补全、诊断、跳转）**
 - 检查 `ets.sdkPath` 是否已配置并指向有效路径
-- 执行 `ArkTS: Restart Language Server` 重启语言服务器
+- 首次激活需自动安装语言服务器（约 1 分钟），可执行 `ArkTS: Restart Language Server` 重试安装
 - 查看"输出"面板 → 选择"ArkTS Language Server"查看错误日志
+
+**编译/运行按钮报错 `devecocli` 未安装**
+- 插件会自动安装，也可执行 `ArkTS: 安装 deveco-cli 工具` 手动安装
+- 安装失败时可手动执行命令面板提示的 `npm install -g @deveco/deveco-cli`
 
 **MCP 工具报错 `hdc not found`**
 - 确认 DevEco Studio 已安装，`hdc` 在系统 PATH 中
