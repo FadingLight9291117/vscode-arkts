@@ -2,7 +2,7 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
-## [Unreleased] - dev-language_server
+## [2.2.0] - 2026-08-07
 
 ### 新增
 - **编辑器标题栏编译/运行按钮** — 打开 `.ets` 文件时显示「编译」「运行」两个按钮，一键完成构建与运行：
