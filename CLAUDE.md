@@ -32,7 +32,12 @@ Each tool in `src/mcp/tools/` follows this shape:
 ```typescript
 const MySchema = z.object({ /* params */ });
 export const myTool: ToolDefinition<typeof MySchema> = {
-  definition: { name: 'harmonyos_my_tool', description: '...', inputSchema: zodToJsonSchema(MySchema) },
+  definition: {
+    name: 'harmonyos_my_tool',
+    description: '...',
+    // inputSchema 是手写 JSON Schema（与 schema 字段保持字段一致）
+    inputSchema: { type: 'object', properties: { /* ... */ }, required: [/* ... */] },
+  },
   schema: MySchema,
   handler: async (args) => { /* return toolResult(data) or toolError(msg) */ },
 };

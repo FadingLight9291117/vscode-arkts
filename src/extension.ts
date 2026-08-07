@@ -52,7 +52,6 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
     const clientOptions: LanguageClientOptions = {
         documentSelector: [
             { language: 'ets', scheme: 'file' },
-            { language: 'json', scheme: 'file' },
             { pattern: '**/*.json5', scheme: 'file' },
         ],
         outputChannel: vscode.window.createOutputChannel('ArkTS Language Server'),
@@ -79,24 +78,38 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
         vscode.languages.registerDocumentFormattingEditProvider('ets', {
             async provideDocumentFormattingEdits(document) {
                 if (!client?.isRunning()) return [];
-                const result = await client.sendRequest<{ code?: string; errors?: string[] } | undefined>(
-                    'ets/formatDocument',
-                    { textDocument: { uri: document.uri.toString(), text: document.getText() } },
-                );
-                if (!result?.code) return [];
-                if (result.errors && result.errors.length > 0) {
-                    vscode.window.showErrorMessage(`ArkTS format error: ${result.errors.join(', ')}`);
+                try {
+                    const result = await client.sendRequest<{ code?: string; errors?: string[] } | undefined>(
+                        'ets/formatDocument',
+                        { textDocument: { uri: document.uri.toString(), text: document.getText() } },
+                    );
+                    if (!result?.code) return [];
+                    if (result.errors && result.errors.length > 0) {
+                        vscode.window.showErrorMessage(`ArkTS format error: ${result.errors.join(', ')}`);
+                        return [];
+                    }
+                    return [vscode.TextEdit.replace(
+                        new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length)),
+                        result.code,
+                    )];
+                } catch (error) {
+                    // server 不支持该请求或已断开时静默降级，不打断用户
+                    console.error('ets/formatDocument failed:', error);
                     return [];
                 }
-                return [vscode.TextEdit.replace(
-                    new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length)),
-                    result.code,
-                )];
             },
         }),
     );
 
-    await client.start();
+    try {
+        await client.start();
+    } catch (error) {
+        // 语言服务器启动失败只警告，不阻断插件激活（MCP 工具等仍需可用）
+        console.error('ArkTS language server failed to start:', error);
+        vscode.window.showWarningMessage(
+            'ArkTS: 语言服务器启动失败，格式化/补全等功能不可用。可运行 "ArkTS: Restart Language Server" 重试。'
+        );
+    }
 }
 
 async function restartLanguageClient(context: vscode.ExtensionContext): Promise<void> {

@@ -58,9 +58,10 @@ export const getCrashLogs: ToolDefinition<typeof GetCrashLogsSchema> = {
     let fetchedPath: string | undefined;
     if (fetchLatest && files.length > 0) {
       const remotePath = `/data/log/faultlog/${files[0]}`;
+      // basename 防止设备端文件名含路径分隔符时写偏本地目录
       const localPath = path.join(
         localDir ?? os.tmpdir(),
-        files[0]
+        path.basename(files[0])
       );
       await hdcExec(["file", "recv", remotePath, localPath], {
         deviceId,
@@ -109,9 +110,16 @@ export const getAppMemory: ToolDefinition<typeof GetAppMemorySchema> = {
       timeout: 10_000,
     });
 
+    // ps -ef 格式: UID PID PPID ... CMD；精确匹配 CMD 列（兼容 "bundleName:" 前缀变体），
+    // 避免子串误匹配（如 myapp 匹配到 myapp2）
     const matchLine = psOutput
       .split("\n")
-      .find((l) => l.includes(bundleName));
+      .find((l) => {
+        const parts = l.trim().split(/\s+/);
+        if (parts.length < 2) return false;
+        const cmd = parts[parts.length - 1];
+        return cmd === bundleName || cmd.startsWith(bundleName + ":");
+      });
 
     if (!matchLine) {
       throw new Error(`No running process found for bundle: ${bundleName}. Is the app launched?`);

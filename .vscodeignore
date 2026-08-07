@@ -38,6 +38,11 @@ node_modules/sharp/**
 node_modules/zod/**
 node_modules/@modelcontextprotocol/**
 
+# wasm32 回退链（@ohos-rs/oxk / project-detector 的 wasm-wasi 可选依赖），桌面端用原生二进制，不需要
+node_modules/@napi-rs/**
+node_modules/@emnapi/**
+node_modules/@tybys/**
+
 # Source maps
 **/*.map
 
