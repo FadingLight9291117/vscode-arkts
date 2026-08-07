@@ -5,12 +5,21 @@ import type { LanguageClientOptions, ServerOptions } from 'vscode-languageclient
 import { MCPServer } from './mcp/server';
 import { DevicePickerUI } from './mcp/ui/devicePicker';
 import { ProjectInfoUI } from './mcp/ui/projectInfo';
-import { buildApp, runApp, ensureDevecoCli, disposeRunApp } from './runApp';
+import { buildApp, runApp, ensureDevecoCli, ensureLanguageServer, disposeRunApp } from './runApp';
 
 let client: LanguageClient | undefined;
 
+/** 语言服务器安装目录（扩展数据目录，按需安装，不随 VSIX 分发） */
+function getServerInstallDir(context: vscode.ExtensionContext): string {
+    return path.join(context.globalStorageUri.fsPath, 'language-server');
+}
+
+/** 语言服务器 bin 路径（数据目录下 node_modules） */
 function getServerBin(context: vscode.ExtensionContext): string {
-    return path.join(context.extensionPath, 'node_modules', '@arkts', 'language-server', 'bin', 'ets-language-server.js');
+    return path.join(
+        getServerInstallDir(context),
+        'node_modules', '@arkts', 'language-server', 'bin', 'ets-language-server.js',
+    );
 }
 
 function getSdkPath(): string {
@@ -21,7 +30,7 @@ function getHmsPath(): string {
     return vscode.workspace.getConfiguration('ets').get<string>('hmsPath', '');
 }
 
-async function startLanguageClient(context: vscode.ExtensionContext): Promise<void> {
+async function startLanguageClient(context: vscode.ExtensionContext, serverBin: string): Promise<void> {
     const sdkPath = getSdkPath();
     const hmsPath = getHmsPath();
     if (!sdkPath) {
@@ -36,7 +45,6 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
         return;
     }
 
-    const serverBin = getServerBin(context);
     const serverOptions: ServerOptions = {
         run: {
             module: serverBin,
@@ -113,12 +121,15 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
     }
 }
 
+/** 重启语言客户端：先确保语言服务器已安装，再启动 */
 async function restartLanguageClient(context: vscode.ExtensionContext): Promise<void> {
     if (client) {
         await client.stop();
         client = undefined;
     }
-    await startLanguageClient(context);
+    const serverBin = await ensureLanguageServer(getServerInstallDir(context));
+    if (!serverBin) return; // 安装失败时错误提示已由 ensureLanguageServer 展示
+    await startLanguageClient(context, serverBin);
 }
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -143,7 +154,19 @@ export async function activate(context: vscode.ExtensionContext) {
         }),
     );
 
-    await startLanguageClient(context);
+    // 语言服务器按需安装（缺失时自动安装到扩展数据目录），完成后再启动语言客户端
+    const serverBin = await ensureLanguageServer(getServerInstallDir(context));
+    if (serverBin) {
+        await startLanguageClient(context, serverBin);
+    } else {
+        vscode.window
+            .showWarningMessage('ArkTS: 语言服务器未就绪，补全/格式化/诊断等功能不可用。', '重试安装')
+            .then((choice) => {
+                if (choice === '重试安装') {
+                    restartLanguageClient(context);
+                }
+            });
+    }
 
     // 自动集成 devecocli：未安装时后台安装，不阻塞插件激活
     void ensureDevecoCli();

@@ -4,8 +4,9 @@ import * as vscode from 'vscode';
 import { execFile } from 'child_process';
 
 /**
- * 编辑器标题栏按钮（arkts.buildApp / arkts.runApp）：
- * 通过 devecocli 编译 / 构建并运行，自动识别项目根。
+ * 工具链管理 + 编辑器标题栏按钮（arkts.buildApp / arkts.runApp）：
+ * - devecocli 按需全局安装（命令行工具，需进 PATH）
+ * - @arkts/language-server 按需安装到扩展数据目录（无需进 PATH，避免 VSIX 体积膨胀）
  */
 
 let outputChannel: vscode.OutputChannel | undefined;
@@ -59,6 +60,45 @@ function resolveProject(out: vscode.OutputChannel): string | undefined {
 }
 
 const DEVECO_CLI_PKG = '@deveco/deveco-cli';
+const LANGUAGE_SERVER_SPEC = '@arkts/language-server@1.3.10';
+
+/**
+ * 确保语言服务器已安装到 installDir（扩展数据目录），返回 bin 路径；失败返回 undefined。
+ * 检测到已存在则直接复用；缺失时 npm install --prefix 安装。
+ */
+export async function ensureLanguageServer(installDir: string): Promise<string | undefined> {
+  const binPath = path.join(
+    installDir, 'node_modules', '@arkts', 'language-server', 'bin', 'ets-language-server.js'
+  );
+  if (fs.existsSync(binPath)) return binPath;
+
+  const out = getOutputChannel();
+  try {
+    await vscode.window.withProgress(
+      { location: vscode.ProgressLocation.Notification, title: 'ArkTS: 正在安装语言服务器（首次约 1 分钟）...' },
+      async () => {
+        fs.mkdirSync(installDir, { recursive: true });
+        out.show(true);
+        const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+        await execWithOutput(out, npmCmd, ['install', '--prefix', installDir, LANGUAGE_SERVER_SPEC], { timeoutMs: 600_000 });
+      }
+    );
+    if (fs.existsSync(binPath)) return binPath;
+    throw new Error('安装完成后未找到语言服务器入口');
+  } catch (error: any) {
+    vscode.window
+      .showErrorMessage(
+        `ArkTS: 语言服务器安装失败 - ${error.message}。可手动执行: npm install --prefix "${installDir}" ${LANGUAGE_SERVER_SPEC}`,
+        '复制命令'
+      )
+      .then((choice) => {
+        if (choice === '复制命令') {
+          vscode.env.clipboard.writeText(`npm install --prefix "${installDir}" ${LANGUAGE_SERVER_SPEC}`);
+        }
+      });
+    return undefined;
+  }
+}
 
 /** 执行命令，stdout/stderr 实时写入输出面板；非 0 退出码或 spawn 失败时 reject */
 function execWithOutput(out: vscode.OutputChannel, cmd: string, args: string[], opts: { cwd?: string; timeoutMs: number }): Promise<void> {

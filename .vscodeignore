@@ -53,6 +53,5 @@ node_modules/@tybys/**
 # 博客/文档
 blog-*.md
 
-# @arkts/language-server：排除 sourcemap 和未使用的 ESM 产物（bin 只加载 index.js）
-node_modules/@arkts/language-server/out/*.map
-# node_modules/@arkts/language-server/out/index.mjs
+# @arkts/language-server 已改为按需安装（扩展数据目录），不再随 VSIX 分发
+node_modules/@arkts/**

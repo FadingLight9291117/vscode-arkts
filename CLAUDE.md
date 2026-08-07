@@ -17,7 +17,7 @@ VS Code extension providing ArkTS (HarmonyOS `.ets`) language support plus Harmo
 ## Architecture (non-obvious parts)
 
 - `src/extension.ts` is the single entrypoint; `activate()` starts both the LSP client and the MCP server.
-- **LSP client** (`vscode-languageclient`): connects to `@arkts/language-server` via IPC. The server binary is at `node_modules/@arkts/language-server/bin/ets-language-server.js` (a runtime dep, not bundled). Completion, hover, go-to-definition, references, and diagnostics all come from the LSP — there are no hand-rolled providers in `src/providers/`. Debug port for the language server is 6009.
+- **LSP client** (`vscode-languageclient`): connects to `@arkts/language-server` via IPC. The server is **not bundled in the VSIX** — `ensureLanguageServer()` (`src/runApp.ts`) installs `@arkts/language-server@1.3.10` on demand to the extension's global storage dir (`<globalStorage>/language-server/node_modules/...`) and the bin path is resolved from there. Completion, hover, go-to-definition, references, and diagnostics all come from the LSP — there are no hand-rolled providers in `src/providers/`. Debug port for the language server is 6009.
 - **Required config**: `ets.sdkPath` must point to the OpenHarmony SDK (`sdk/default/openharmony` under DevEco Studio). If unset the LSP does not start and a warning is shown. Changing `ets.sdkPath` auto-restarts the client. `arkts.restartServer` command also restarts it manually.
 - **Custom LSP request** `ets/formatDocument`: the extension registers a `DocumentFormattingEditProvider` that proxies format requests to the language server via this non-standard request. It receives `{ code?, errors? }` and applies a full-document replacement edit.
 - **`src/mcp/`** is **not** a real stdio MCP server. `MCPServer` (`src/mcp/server.ts`) is an in-process tool registry (zod-validated handlers in `src/mcp/tools/`) invoked by VS Code commands/UI (`src/mcp/ui/`). Tools shell out to the `hdc` CLI (`src/mcp/utils/hdc.ts`) — requires HarmonyOS `hdc` on PATH at runtime.
@@ -47,7 +47,7 @@ Use `wrapTool(myTool)` (from `src/mcp/utils/response.ts`) to add automatic try/c
 
 ## Gotchas
 
-- `vscode-languageclient` is marked **external** in `esbuild.js` (not bundled) and lives in `dependencies` — it's resolved from `node_modules` at runtime. `@arkts/language-server` is also in `dependencies` and ships verbatim inside the VSIX. Other runtime deps (zod, MCP SDK) remain in `devDependencies` and are bundled by esbuild.
+- `vscode-languageclient` is marked **external** in `esbuild.js` (not bundled) and is the only entry in `dependencies` — it's resolved from `node_modules` at runtime. `@arkts/language-server` was removed from dependencies to keep the VSIX at ~545 KB; it's installed on demand to the extension's global storage dir. Other runtime deps (zod, MCP SDK) remain in `devDependencies` and are bundled by esbuild.
 - `out/` contains only the esbuild bundle; stale `tsc`-emitted subdirs may exist but are ignored (see `.vscodeignore`).
 - Version bumps go in `package.json` + `CHANGELOG.md`; publishing steps are in `docs/publish.md`.
 - `AGENTS.md` at the repo root is an agent-focused architecture guide; keep it in sync when adding tools or changing the LSP setup.
