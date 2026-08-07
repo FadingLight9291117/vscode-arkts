@@ -5,6 +5,7 @@ import type { LanguageClientOptions, ServerOptions } from 'vscode-languageclient
 import { MCPServer } from './mcp/server';
 import { DevicePickerUI } from './mcp/ui/devicePicker';
 import { ProjectInfoUI } from './mcp/ui/projectInfo';
+import { buildApp, runApp, ensureDevecoCli, disposeRunApp } from './runApp';
 
 let client: LanguageClient | undefined;
 
@@ -132,6 +133,9 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('arkts.selectDevice', () => devicePickerUI.show()),
         vscode.commands.registerCommand('arkts.showProjectInfo', () => projectInfoUI.show()),
         vscode.commands.registerCommand('arkts.restartServer', () => restartLanguageClient(context)),
+        vscode.commands.registerCommand('arkts.buildApp', () => buildApp()),
+        vscode.commands.registerCommand('arkts.runApp', () => runApp()),
+        vscode.commands.registerCommand('arkts.installDevecoCli', () => ensureDevecoCli()),
         vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration('ets.sdkPath') || e.affectsConfiguration('ets.hmsPath')) {
                 restartLanguageClient(context);
@@ -140,9 +144,13 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     await startLanguageClient(context);
+
+    // 自动集成 devecocli：未安装时后台安装，不阻塞插件激活
+    void ensureDevecoCli();
 }
 
 export async function deactivate() {
+    disposeRunApp();
     if (client) {
         await client.stop();
     }

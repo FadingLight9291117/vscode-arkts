@@ -5,6 +5,11 @@
 ## [Unreleased] - dev-language_server
 
 ### 新增
+- **编辑器标题栏编译/运行按钮** — 打开 `.ets` 文件时显示「编译」「运行」两个按钮，一键完成构建与运行：
+  - 「编译」→ `devecocli build`；「运行」→ `devecocli run`（编译+安装+启动），输出实时写入 "ArkTS Run" 面板
+  - 自动识别项目根：从当前文件向上取最顶层含 `oh-package.json5` 的目录（不要求 hvigorw，兼容 CLI 生成的工程）
+  - 插件激活时自动检测并全局安装 `@deveco/deveco-cli`（未安装时后台自动安装，失败提示手动命令）；也可通过命令 `ArkTS: 安装 deveco-cli 工具` 手动安装
+
 - **LSP 语言服务器集成** — 使用 `@arkts/language-server` 替代手写 Provider，补全、悬停、跳转、引用、诊断全部由 LSP 驱动
   - 新增 `ets/formatDocument` 自定义请求，支持文档格式化
   - 新增命令 `ArkTS: Restart Language Server` 手动重启语言服务器

@@ -123,8 +123,36 @@
       {
         "command": "arkts.restartServer",
         "title": "ArkTS: Restart Language Server"
+      },
+      {
+        "command": "arkts.buildApp",
+        "title": "ArkTS: 编译",
+        "icon": "$(build)"
+      },
+      {
+        "command": "arkts.runApp",
+        "title": "ArkTS: 运行（编译+安装+启动）",
+        "icon": "$(play)"
+      },
+      {
+        "command": "arkts.installDevecoCli",
+        "title": "ArkTS: 安装 deveco-cli 工具"
       }
     ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "arkts.buildApp",
+          "when": "resourceLangId == ets",
+          "group": "navigation"
+        },
+        {
+          "command": "arkts.runApp",
+          "when": "resourceLangId == ets",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "ArkTS",
       "properties": {
@@ -141,13 +169,21 @@
         "ets.linterVersion": {
           "type": "string",
           "default": "1.1",
-          "enum": ["1.1", "off"],
+          "enum": [
+            "1.1",
+            "off"
+          ],
           "description": "ArkTS Linter 版本。设为 off 可禁用 ArkTS 规范检查。"
         },
         "ets.resourceReferenceDiagnostic": {
           "type": "string",
           "default": "error",
-          "enum": ["error", "warning", "information", "off"],
+          "enum": [
+            "error",
+            "warning",
+            "information",
+            "off"
+          ],
           "description": "$r() 资源引用找不到时的诊断级别。"
         }
       }
