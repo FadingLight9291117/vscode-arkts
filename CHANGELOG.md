@@ -2,6 +2,17 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [2.2.2] - 2026-08-08
+
+### 修复
+- **设备信息解析兼容 HarmonyOS NEXT** — 设备选择提示中型号/品牌/系统版本不再显示 Unknown：
+  - NEXT 已废弃 Android 式 `ro.*` 属性名（`param get` 报 errNum 1002 参数不存在），改为按 `ro.*` → `const.*` 候选链逐个尝试（如 `const.product.model`、`const.product.software.version`、`const.ohos.apiversion`）
+  - `getprop` 输出兼容 `[key]: [value]`、`key: value`、`key=value` 三种格式
+  - 解析失败时选择提示回退显示设备 UDID，不再显示一排 Unknown
+
+### 优化
+- **VSIX 包体积 545 KB → 341 KB** — 排除 `node_modules` 中的类型声明（`.d.ts`）、文档与 CLI 入口等运行时死重；排除开发日志目录 `.arkts/`（此前开发机日志会随包分发）
+
 ## [2.2.1] - 2026-08-07
 
 ### 变更
