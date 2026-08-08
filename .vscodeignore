@@ -7,6 +7,7 @@ AGENTS.md
 src/**
 examples/**
 docs/**
+.arkts/**
 
 # 构建配置
 tsconfig.json
@@ -42,6 +43,16 @@ node_modules/@modelcontextprotocol/**
 node_modules/@napi-rs/**
 node_modules/@emnapi/**
 node_modules/@tybys/**
+
+# vscode-languageclient 运行时只 require .js；类型声明、文档、CLI 入口均为死重
+node_modules/**/*.d.ts
+node_modules/**/README*
+node_modules/**/LICENSE*
+node_modules/**/License*
+node_modules/**/thirdpartynotices.txt
+node_modules/**/CHANGELOG*
+node_modules/**/bin/**
+node_modules/**/*.cmd
 
 # Source maps
 **/*.map
