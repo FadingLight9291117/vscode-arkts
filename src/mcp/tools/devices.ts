@@ -53,27 +53,74 @@ export const getDeviceInfo: ToolDefinition<typeof GetDeviceInfoSchema> = {
   },
   schema: GetDeviceInfoSchema,
   handler: async ({ deviceId }) => {
-    const shellOutput = await hdcExec(["shell", "getprop"], {
-      deviceId,
-      timeout: 10000,
-    });
+    // getprop 失败（如设备不支持）时降级为空输出，走 param get 兜底
+    let shellOutput = "";
+    try {
+      shellOutput = await hdcExec(["shell", "getprop"], {
+        deviceId,
+        timeout: 10000,
+      });
+    } catch {
+      /* 忽略，交给 param get 兜底 */
+    }
 
-    const parseProperty = (prop: string): string => {
-      const match = shellOutput.match(
-        new RegExp(`\\[${prop}\\]:\\s*\\[([^\\]]+)\\]`)
-      );
-      return match ? match[1] : "Unknown";
+    // Android 式 ro.* 与 HarmonyOS NEXT 式 const.* 属性名互为候选（NEXT 已废弃 ro.*，errNum 1002 = 参数不存在）
+    const PROPERTY_ALIASES: Record<string, string[]> = {
+      model: ["ro.product.model", "const.product.model"],
+      brand: ["ro.product.brand", "const.product.brand"],
+      manufacturer: ["ro.product.manufacturer", "const.product.manufacturer"],
+      osVersion: ["ro.build.version.release", "const.product.software.version"],
+      sdkVersion: ["ro.build.version.sdk", "const.ohos.apiversion"],
+      buildId: ["ro.build.display.id", "const.build.version.incremental"],
+      abi: ["ro.product.cpu.abi", "const.product.cpu.abi"],
+    };
+
+    // 兼容 [key]: [value]、key: value、key=value 三种 getprop 输出格式
+    const fromGetprop = (prop: string): string | undefined => {
+      const patterns = [
+        new RegExp(`\\[${prop}\\]:\\s*\\[([^\\]]+)\\]`),
+        new RegExp(`^\\s*${prop}\\s*[:=]\\s*(.+)$`, "m"),
+      ];
+      for (const pattern of patterns) {
+        const match = shellOutput.match(pattern);
+        if (match) return match[1].trim();
+      }
+      return undefined;
+    };
+
+    // HarmonyOS 原生参数系统（getprop 只是兼容层）；输出含 fail/errNum/error 视为获取失败
+    const fromParam = async (prop: string): Promise<string | undefined> => {
+      try {
+        const value = (
+          await hdcExec(["shell", "param", "get", prop], {
+            deviceId,
+            timeout: 5000,
+          })
+        ).trim();
+        if (value && !/fail|errnum|error/i.test(value)) return value;
+      } catch {
+        /* 忽略，返回 undefined */
+      }
+      return undefined;
+    };
+
+    const parseProperty = async (field: string): Promise<string> => {
+      for (const name of PROPERTY_ALIASES[field]) {
+        const value = fromGetprop(name) ?? (await fromParam(name));
+        if (value) return value;
+      }
+      return "Unknown";
     };
 
     const deviceInfo = {
       udid: deviceId,
-      model: parseProperty("ro.product.model"),
-      brand: parseProperty("ro.product.brand"),
-      manufacturer: parseProperty("ro.product.manufacturer"),
-      osVersion: parseProperty("ro.build.version.release"),
-      sdkVersion: parseProperty("ro.build.version.sdk"),
-      buildId: parseProperty("ro.build.display.id"),
-      abi: parseProperty("ro.product.cpu.abi"),
+      model: await parseProperty("model"),
+      brand: await parseProperty("brand"),
+      manufacturer: await parseProperty("manufacturer"),
+      osVersion: await parseProperty("osVersion"),
+      sdkVersion: await parseProperty("sdkVersion"),
+      buildId: await parseProperty("buildId"),
+      abi: await parseProperty("abi"),
     };
 
     return toolResult(deviceInfo);

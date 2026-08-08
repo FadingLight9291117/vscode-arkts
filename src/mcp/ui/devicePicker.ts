@@ -47,8 +47,15 @@ export class DevicePickerUI {
 
         if (!infoResult.isError) {
           const deviceInfo = JSON.parse(infoResult.content[0].text);
+          // 信息字段可能为 Unknown（属性解析失败），此时回退显示 udid，未知字段直接省略
+          const model =
+            deviceInfo.model !== "Unknown" ? deviceInfo.model : deviceInfo.udid;
+          const brand =
+            deviceInfo.brand !== "Unknown" ? ` (${deviceInfo.brand})` : "";
+          const os =
+            deviceInfo.osVersion !== "Unknown" ? deviceInfo.osVersion : "?";
           vscode.window.showInformationMessage(
-            `Selected: ${deviceInfo.model} (${deviceInfo.brand}) - OS ${deviceInfo.osVersion}`
+            `Selected: ${model}${brand} - OS ${os}`
           );
         }
 
