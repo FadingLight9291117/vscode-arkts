@@ -111,14 +111,23 @@ export const getProjectInfo: ToolDefinition<typeof GetProjectInfoSchema> = {
       apiReleaseType: jsonContent.app?.apiReleaseType,
     };
 
-    // Try to get modules list from build-profile.json5
+    // Try to get modules / products / signingConfigs from build-profile.json5
     try {
       const buildProfilePath = join(projectPath, "build-profile.json5");
       if (existsSync(buildProfilePath)) {
         const buildContent = readFileSync(buildProfilePath, "utf-8");
         const buildJson = parseJson5(buildContent);
-        projectInfo.modules =
-          buildJson.modules?.map((m: any) => m.name) || [];
+        projectInfo.modules = buildJson.modules?.map((m: any) => m.name) || [];
+        projectInfo.products = (buildJson.app?.products ?? []).map((p: any) => ({
+          name: p.name,
+          signingConfig: p.signingConfig,
+          compatibleSdkVersion: p.compatibleSdkVersion,
+          runtimeOS: p.runtimeOS,
+        }));
+        projectInfo.signingConfigs = (buildJson.app?.signingConfigs ?? []).map((s: any) => ({
+          name: s.name,
+          type: s.type,
+        }));
       }
     } catch (e) {
       console.error("Could not read build-profile.json5:", e);

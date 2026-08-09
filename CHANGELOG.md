@@ -2,6 +2,28 @@
 
 本文件记录 ArkTS Language Support 插件的所有重要更改。
 
+## [2.3.0] - 2026-08-09
+
+### 新增
+- **一键生成签名（`ArkTS: 生成签名`）** — 编辑器标题栏新增「签名」按钮，通过 `devecocli signature generate` 自动生成签名材料并写入项目配置：
+  - 与「编译」「运行」按钮同列，仅对 `.ets` 文件显示
+  - 从当前文件自动识别项目根（最顶层含 `oh-package.json5` 的目录），输出实时写入 "ArkTS Run" 面板
+
+- **构建模式选择** — 标题栏新增「构建模式」按钮（齿轮图标），点击选择构建版本（default / debug / release）：
+  - default：不带参数（产品 default · debug 构建模式）；debug / release：追加 `--build-mode` 参数
+  - 按工作区记住选择：「编译」「运行」按钮直接使用预设的模式执行，不再弹窗（未设置时默认 default）
+
+- **标题栏「选择设备」按钮** — 一键列出并选择 HarmonyOS 设备：
+  - 复用 MCP 设备列表/详情能力，按工作区记住上次选择的设备（置顶高亮，回车即复用）
+
+- **项目信息面板增强** — `ArkTS: Show Project Info` 不再只有 4 个字段，改为结构化展示：
+  - 基本信息：项目路径、Bundle Name、版本、兼容最低版本、Target API、API Release Type
+  - 新增：构建产品表（名称/签名配置/兼容 SDK/运行系统）、签名配置、模块表（名称/类型/路径）、根依赖表（含 dev 依赖数量）
+  - `harmonyos_get_project_info` 工具同步补充 `products`、`signingConfigs` 字段（AI 助手同样受益）
+
+### 修复
+- **JSON5 解析器修复** — 改用标准 `json5` 库：旧实现（剥注释后交给 `JSON.parse`）不支持无引号键名，导致 DevEco 生成的 `build-profile.json5`（裸键 `app:`、`signingConfigs:`）解析失败，项目信息面板的产品/签名/模块、MCP 项目类工具（`harmonyos_list_modules` 等）全部读不到数据
+
 ## [2.2.2] - 2026-08-08
 
 ### 修复

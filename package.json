@@ -2,7 +2,7 @@
   "name": "arkts-language-support",
   "displayName": "ArkTS Language Support - AI-Powered HarmonyOS Development",
   "description": "AI-powered ArkTS language support with MCP integration. Let Claude, Copilot, Cursor, or OpenCode assist your HarmonyOS development - manage devices, analyze projects, and debug apps with natural language.",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "publisher": "cheliangzhao",
   "author": {
     "name": "车亮召"
@@ -114,7 +114,8 @@
     "commands": [
       {
         "command": "arkts.selectDevice",
-        "title": "ArkTS: Select HarmonyOS Device"
+        "title": "ArkTS: 选择设备",
+        "icon": "$(device-mobile)"
       },
       {
         "command": "arkts.showProjectInfo",
@@ -126,13 +127,23 @@
       },
       {
         "command": "arkts.buildApp",
-        "title": "ArkTS: 编译",
+        "title": "ArkTS: Build 编译",
         "icon": "$(build)"
       },
       {
         "command": "arkts.runApp",
-        "title": "ArkTS: 运行（编译+安装+启动）",
+        "title": "ArkTS: Run 运行（编译+安装+启动）",
         "icon": "$(play)"
+      },
+      {
+        "command": "arkts.signApp",
+        "title": "ArkTS: Sign 生成签名",
+        "icon": "$(key)"
+      },
+      {
+        "command": "arkts.selectBuildMode",
+        "title": "ArkTS: 选择构建模式",
+        "icon": "$(gear)"
       },
       {
         "command": "arkts.installDevecoCli",
@@ -148,6 +159,21 @@
         },
         {
           "command": "arkts.runApp",
+          "when": "resourceLangId == ets",
+          "group": "navigation"
+        },
+        {
+          "command": "arkts.signApp",
+          "when": "resourceLangId == ets",
+          "group": "navigation"
+        },
+        {
+          "command": "arkts.selectBuildMode",
+          "when": "resourceLangId == ets",
+          "group": "navigation"
+        },
+        {
+          "command": "arkts.selectDevice",
           "when": "resourceLangId == ets",
           "group": "navigation"
         }
@@ -213,6 +239,7 @@
     "@vscode/test-electron": "^2.3.8",
     "esbuild": "^0.27.4",
     "eslint": "^8.56.0",
+    "json5": "^2.2.3",
     "sharp": "^0.34.5",
     "typescript": "^5.9.3",
     "zod": "^3.24.1"

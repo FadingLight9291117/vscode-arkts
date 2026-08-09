@@ -3,6 +3,18 @@ export interface HarmonyOSDevice {
   status: string;
 }
 
+export interface ProductInfo {
+  name: string;
+  signingConfig?: string;
+  compatibleSdkVersion?: string;
+  runtimeOS?: string;
+}
+
+export interface SigningConfigInfo {
+  name: string;
+  type?: string;
+}
+
 export interface ProjectInfo {
   bundleName: string;
   versionCode: number;
@@ -11,6 +23,8 @@ export interface ProjectInfo {
   targetAPIVersion?: number;
   apiReleaseType?: string;
   modules?: string[];
+  products?: ProductInfo[];
+  signingConfigs?: SigningConfigInfo[];
 }
 
 export interface ModuleInfo {

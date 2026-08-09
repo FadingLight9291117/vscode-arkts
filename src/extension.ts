@@ -5,7 +5,7 @@ import type { LanguageClientOptions, ServerOptions } from 'vscode-languageclient
 import { MCPServer } from './mcp/server';
 import { DevicePickerUI } from './mcp/ui/devicePicker';
 import { ProjectInfoUI } from './mcp/ui/projectInfo';
-import { buildApp, runApp, ensureDevecoCli, ensureLanguageServer, disposeRunApp } from './runApp';
+import { buildApp, runApp, signApp, selectBuildMode, ensureDevecoCli, ensureLanguageServer, disposeRunApp } from './runApp';
 
 let client: LanguageClient | undefined;
 
@@ -141,11 +141,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         mcpServer,
-        vscode.commands.registerCommand('arkts.selectDevice', () => devicePickerUI.show()),
+        vscode.commands.registerCommand('arkts.selectDevice', () => devicePickerUI.show(context.workspaceState)),
         vscode.commands.registerCommand('arkts.showProjectInfo', () => projectInfoUI.show()),
         vscode.commands.registerCommand('arkts.restartServer', () => restartLanguageClient(context)),
-        vscode.commands.registerCommand('arkts.buildApp', () => buildApp()),
-        vscode.commands.registerCommand('arkts.runApp', () => runApp()),
+        vscode.commands.registerCommand('arkts.buildApp', () => buildApp(context.workspaceState)),
+        vscode.commands.registerCommand('arkts.runApp', () => runApp(context.workspaceState)),
+        vscode.commands.registerCommand('arkts.signApp', () => signApp()),
+        vscode.commands.registerCommand('arkts.selectBuildMode', () => selectBuildMode(context.workspaceState)),
         vscode.commands.registerCommand('arkts.installDevecoCli', () => ensureDevecoCli()),
         vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration('ets.sdkPath') || e.affectsConfiguration('ets.hmsPath')) {

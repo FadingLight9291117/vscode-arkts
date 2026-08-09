@@ -179,20 +179,57 @@ export async function ensureDevecoCli(): Promise<void> {
   }
 }
 
-/** 编译（arkts.buildApp）→ devecocli build */
-export async function buildApp(): Promise<void> {
+/** 构建版本选项（编译前 QuickPick 选择） */
+const BUILD_MODES: vscode.QuickPickItem[] = [
+  { label: 'default', description: '默认构建（产品 default · debug 构建模式）' },
+  { label: 'debug', description: 'debug 构建模式' },
+  { label: 'release', description: 'release 构建模式' },
+];
+
+/** workspaceState 键：记住上次选择的构建版本（按工作区持久化，编译/运行共用） */
+const LAST_BUILD_MODE_KEY = 'arkts.lastBuildMode';
+
+/**
+ * 弹出构建版本 QuickPick（上次选择置顶，回车即复用），选择后写入 workspaceState；
+ * 用户取消时返回 undefined。仅「构建模式」按钮（arkts.selectBuildMode）调用。
+ */
+async function pickBuildMode(state: vscode.Memento, title: string): Promise<string | undefined> {
+  const lastMode = state.get<string>(LAST_BUILD_MODE_KEY);
+  const items = lastMode
+    ? [BUILD_MODES.find((m) => m.label === lastMode)!, ...BUILD_MODES.filter((m) => m.label !== lastMode)]
+    : BUILD_MODES;
+  const mode = await vscode.window.showQuickPick(items, {
+    placeHolder: `选择构建版本${lastMode ? `（上次：${lastMode}）` : ''}`,
+    title,
+  });
+  if (!mode) return undefined; // 用户取消
+  await state.update(LAST_BUILD_MODE_KEY, mode.label);
+  return mode.label;
+}
+
+/** 选择构建模式（arkts.selectBuildMode）→ 弹出 QuickPick 并写入 workspaceState，供编译/运行复用 */
+export async function selectBuildMode(state: vscode.Memento): Promise<void> {
+  const mode = await pickBuildMode(state, 'ArkTS: 选择构建模式');
+  if (!mode) return;
+  vscode.window.showInformationMessage(`ArkTS: 构建模式已设为 ${mode}`);
+}
+
+/** 编译（arkts.buildApp）→ devecocli build（直接使用「构建模式」预设的值，未设置时默认 default） */
+export async function buildApp(state: vscode.Memento): Promise<void> {
   const out = getOutputChannel();
   out.show(true);
   const projectRoot = resolveProject(out);
   if (!projectRoot) return;
 
+  const mode = state.get<string>(LAST_BUILD_MODE_KEY) ?? 'default';
+  const args = mode === 'default' ? ['build'] : ['build', '--build-mode', mode];
   try {
     await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: 'ArkTS: 编译中...' },
-      () => runDevecocli(out, ['build'], projectRoot, 600_000)
+      { location: vscode.ProgressLocation.Notification, title: `ArkTS: 编译中（${mode}）...` },
+      () => runDevecocli(out, args, projectRoot, 600_000)
     );
-    out.appendLine('[编译] 完成');
-    vscode.window.showInformationMessage('ArkTS: 编译完成');
+    out.appendLine(`[编译] 完成（${mode}）`);
+    vscode.window.showInformationMessage(`ArkTS: 编译完成（${mode}）`);
   } catch (error: any) {
     const hint = error.message.includes('找不到命令 devecocli')
       ? '（devecocli 未安装，插件会自动安装，或运行 "ArkTS: 安装 deveco-cli"）'
@@ -202,8 +239,33 @@ export async function buildApp(): Promise<void> {
   }
 }
 
-/** 运行（arkts.runApp）→ devecocli run（编译+安装+启动） */
-export async function runApp(): Promise<void> {
+/** 运行（arkts.runApp）→ devecocli run（编译+安装+启动，直接使用「构建模式」预设的值） */
+export async function runApp(state: vscode.Memento): Promise<void> {
+  const out = getOutputChannel();
+  out.show(true);
+  const projectRoot = resolveProject(out);
+  if (!projectRoot) return;
+
+  const mode = state.get<string>(LAST_BUILD_MODE_KEY) ?? 'default';
+  const args = mode === 'default' ? ['run'] : ['run', '--build-mode', mode];
+  try {
+    await vscode.window.withProgress(
+      { location: vscode.ProgressLocation.Notification, title: `ArkTS: 构建并运行（${mode}）...` },
+      () => runDevecocli(out, args, projectRoot, 900_000)
+    );
+    out.appendLine(`[运行] 完成（${mode}）`);
+    vscode.window.showInformationMessage(`ArkTS: 运行完成（${mode}）`);
+  } catch (error: any) {
+    const hint = error.message.includes('找不到命令 devecocli')
+      ? '（devecocli 未安装，插件会自动安装，或运行 "ArkTS: 安装 deveco-cli"）'
+      : '';
+    out.appendLine(`[失败] ${error.message}${hint}`);
+    vscode.window.showErrorMessage(`ArkTS: 运行失败 - ${error.message}${hint}`);
+  }
+}
+
+/** 签名（arkts.signApp）→ devecocli signature generate（生成签名材料并写入项目配置） */
+export async function signApp(): Promise<void> {
   const out = getOutputChannel();
   out.show(true);
   const projectRoot = resolveProject(out);
@@ -211,16 +273,16 @@ export async function runApp(): Promise<void> {
 
   try {
     await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: 'ArkTS: 构建并运行...' },
-      () => runDevecocli(out, ['run'], projectRoot, 900_000)
+      { location: vscode.ProgressLocation.Notification, title: 'ArkTS: 生成签名中...' },
+      () => runDevecocli(out, ['signature', 'generate'], projectRoot, 600_000)
     );
-    out.appendLine('[运行] 完成');
-    vscode.window.showInformationMessage('ArkTS: 运行完成');
+    out.appendLine('[签名] 完成');
+    vscode.window.showInformationMessage('ArkTS: 签名完成');
   } catch (error: any) {
     const hint = error.message.includes('找不到命令 devecocli')
       ? '（devecocli 未安装，插件会自动安装，或运行 "ArkTS: 安装 deveco-cli"）'
       : '';
     out.appendLine(`[失败] ${error.message}${hint}`);
-    vscode.window.showErrorMessage(`ArkTS: 运行失败 - ${error.message}${hint}`);
+    vscode.window.showErrorMessage(`ArkTS: 签名失败 - ${error.message}${hint}`);
   }
 }
